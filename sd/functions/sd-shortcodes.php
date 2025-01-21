@@ -1,6 +1,6 @@
 <?php
 /*
- * My CPT Slider from Slides post - test git
+ * My CPT Slider from Slides post
  * use layout from sd-child theme in /template-parts/cpt-slider-tmpl
  * usage [slider group="homepage"]
  *
@@ -149,342 +149,196 @@ add_shortcode('child_categories_menu', 'wp_child_categories_menu');
  * Needed because options are saved as serialized strings.
  *
  */
+ if (!function_exists('sd_theme_option')) {
+    function sd_theme_option($atts) {
+        $default = false;
+        $a = shortcode_atts(array(
+            'option_name' => '',
+            'custom_text' => '',
+            'use_icon' => false,
+            'icon_id' => '',
+            'icon_w' => '16px',
+            'icon_h' => '16px',
+            'hide_prefix' => false, // New option to control prefix visibility
+        ), $atts);
 
-if ( !function_exists( 'sd_theme_option' ) ) {
-	function sd_theme_option($atts) {
-		$default = false;
-		$a = shortcode_atts( array(
-			'option_name' => '',	// What option to get by its name
-			'custom_text' => '',
-			'use_icon' => false,
-			'icon_id' => '',
-			'icon_w' => '',
-			'icon_h' => '',
-		), $atts );
-		$my_option = $a['option_name'];
-		$my_text = $a['custom_text'];
-		$my_icon = $a['use_icon'];
-		$icon_id = $a['icon_id'];
-		$icon_w = $a['icon_w'];
-		$icon_h = $a['icon_h'];
-		
-		if(empty($icon_w)) {
-			$icon_w = '16px';
-		}
-		
-		if(empty($icon_h)) {
-			$icon_h = '16px';
-		}
-		
-		$optionsframework_settings = get_option('optionsframework');
-		// Gets the unique option id
-		$option_name = $optionsframework_settings['id'];
-		if ( get_option($option_name) ) {
-			$options = get_option($option_name);
-		}
-		
-		if ( isset($options[$my_option]) ) {
-			
-			if($my_option == 'site_contact_booking') {
-				
-				if( !empty($my_text) ) {
-					$text = '<span class="text-wrap">'.$my_text.'</span>';
-				} else {
-					$text = '<span class="text-wrap">Book Now</span>';
-				}
-				
-				if($my_icon == true) {
-					if( !empty($icon_id) ) {
-						$i = '[svg i="'.$icon_id.'" w="'.$icon_w.'" h="'.$icon_h.'"]';
-					} else {
-						$i = '<i class="fa fa-calendar-check-o"></i>';
-					}
-				} else {
-					$i = '';
-				}
-				
-				$options[$my_option] = '<span class="site_contact_booking"><span><a href="' .$options[$my_option] . '">'. do_shortcode($i) . $text .'</a></span></span>';
-			}
-			
-			if($my_option == 'site_contact_hrs') {
-				
-				if( !empty($my_text) ) {
-					$text = '<span class="_prefix">'.$my_text.'</span> '. '<span class="text-wrap">' .$options[$my_option] . '</span>';
-				} else {
-					$text = '<span class="text-wrap">' . $options[$my_option] . '</span>';
-				}
-				
-				if($my_icon == true) {
-					if( !empty($icon_id) ) {
-						$i = '[svg i="'.$icon_id.'" w="'.$icon_w.'" h="'.$icon_h.'"]';
-					} else {
-						$i = '<i class="fa fa-clock-o"></i>';
-					}
-				} else {
-					$i = '';
-				}
+        // Get theme options
+        $optionsframework_settings = get_option('optionsframework');
+        $option_name = $optionsframework_settings['id'];
+        $options = get_option($option_name) ?: array();
 
-				$options[$my_option] = '<span class="site_contact_hrs"><span>'. do_shortcode($i) . do_shortcode($text) .'</span></span>';
-			}
+        if (!isset($options[$a['option_name']])) {
+            return $default;
+        }
 
-			if($my_option == 'site_contact_phone') {
-				
-				if( !empty($my_text) ) {
-					$text = '<span class="_prefix">'.$my_text.'</span> '. '<span class="text-wrap">' .$options[$my_option] . '</span>';
-				} else {
-					$text = '<span class="text-wrap">' . $options[$my_option] . '</span>';
-				}
-				
-				if($my_icon == true) {
-					if( !empty($icon_id) ) {
-						$i = '[svg i="'.$icon_id.'" w="'.$icon_w.'" h="'.$icon_h.'"]';
-					} else {
-						$i = '<i class="fa fa-phone"></i>';
-					}
-				} else {
-					$i = '';
-				}
-				$tel = preg_replace('/[^0-9]/', '', $options[$my_option]);
-				$options[$my_option] = '<span class="site_contact_phone"><a href="tel:'. $tel .'"><span>'. do_shortcode($i) . $text .'</span></a></span>';
-			}
-			
-			if($my_option == 'site_contact_phone2') {
-				
-				if( !empty($my_text) ) {
-					$text = '<span class="_prefix">'.$my_text.'</span> '. '<span class="text-wrap">' .$options[$my_option] . '</span>';
-				} else {
-					$text = '<span class="text-wrap">' . $options[$my_option] . '</span>';
-				}
-				
-				if($my_icon == true) {
-					if( !empty($icon_id) ) {
-						$i = '[svg i="'.$icon_id.'" w="'.$icon_w.'" h="'.$icon_h.'"]';
-					} else {
-						$i = '<i class="fa fa-phone"></i>';
-					}
-				} else {
-					$i = '';
-				}
-				$tel = preg_replace('/[^0-9]/', '', $options[$my_option]);
-				$options[$my_option] = '<span class="site_contact_phone site_contact_phone2"><a href="tel:'. $options[$my_option] .'"><span>'. do_shortcode($i) . $text .'</span></a></span>';
-			}
-			
-			if($my_option == 'site_contact_phone3') {
-				
-				if( !empty($my_text) ) {
-					$text = '<span class="_prefix">'.$my_text.'</span> '. '<span class="text-wrap">' .$options[$my_option] . '</span>';
-				} else {
-					$text = '<span class="text-wrap">' . $options[$my_option] . '</span>';
-				}
-				
-				if($my_icon == true) {
-					if( !empty($icon_id) ) {
-						$i = '[svg i="'.$icon_id.'" w="'.$icon_w.'" h="'.$icon_h.'"]';
-					} else {
-						$i = '<i class="fa fa-phone"></i>';
-					}
-				} else {
-					$i = '';
-				}
-				$tel = preg_replace('/[^0-9]/', '', $options[$my_option]);
-				$options[$my_option] = '<span class="site_contact_phone site_contact_phone3"><a href="tel:'. $options[$my_option] .'"><span>'. do_shortcode($i) . $text .'</span></a></span>';
-			}
-			
-			if($my_option == 'site_contact_fax') {
-				
-				if( !empty($my_text) ) {
-					$text = '<span class="_prefix">'.$my_text.'</span> '. '<span class="text-wrap">' .$options[$my_option] . '</span>';
-				} else {
-					$text = $options[$my_option];
-				}
-				
-				if($my_icon == true) {
-					if( !empty($icon_id) ) {
-						$i = '[svg i="'.$icon_id.'" w="'.$icon_w.'" h="'.$icon_h.'"]';
-					} else {
-						$i = '<i class="fa fa-fax"></i>';
-					}
-				} else {
-					$i = '';
-				}
-				
-				$options[$my_option] = '<span class="site_contact_fax"><span>'. do_shortcode($i) . $text .'</span></span>';
-			}
-			
-			if($my_option == 'site_contact_fax2') {
-				
-				if( !empty($my_text) ) {
-					$text = '<span class="_prefix">'.$my_text.'</span> '. '<span class="text-wrap">' .$options[$my_option] . '</span>';
-				} else {
-					$text = $options[$my_option];
-				}
-				
-				if($my_icon == true) {
-					if( !empty($icon_id) ) {
-						$i = '[svg i="'.$icon_id.'" w="'.$icon_w.'" h="'.$icon_h.'"]';
-					} else {
-						$i = '<i class="fa fa-fax"></i>';
-					}
-				} else {
-					$i = '';
-				}
-				
-				$options[$my_option] = '<span class="site_contact_fax site_contact_fax2"><span>'. do_shortcode($i) . $text .'</span></span>';
-			}
-			
-			
-			if($my_option == 'site_contact_fax3') {
-				
-				if( !empty($my_text) ) {
-					$text = '<span class="_prefix">'.$my_text.'</span> '. '<span class="text-wrap">' .$options[$my_option] . '</span>';
-				} else {
-					$text = $options[$my_option];
-				}
-				
-				if($my_icon == true) {
-					if( !empty($icon_id) ) {
-						$i = '[svg i="'.$icon_id.'" w="'.$icon_w.'" h="'.$icon_h.'"]';
-					} else {
-						$i = '<i class="fa fa-fax"></i>';
-					}
-				} else {
-					$i = '';
-				}
-				
-				$options[$my_option] = '<span class="site_contact_fax site_contact_fax3"><span>'. do_shortcode($i) . $text .'</span></span>';
-			}
-			
-			if($my_option == 'site_contact_email') {
-				if( !empty($my_text) ) {
-					$text = '<span class="_prefix">'.$my_text.'</span> '. '<span class="text-wrap">' .$options[$my_option] . '</span>';
-				} else {
-					$text = '<span class="text-wrap">' . $options[$my_option] . '</span>';
-				}
-				
-				if($my_icon == true) {
-					if( !empty($icon_id) ) {
-						$i = '[svg i="'.$icon_id.'" w="'.$icon_w.'" h="'.$icon_h.'"]';
-					} else {
-						$i = '<i class="fa fa-envelope"></i>';
-					}
-				} else {
-					$i = '';
-				}
-				
-				$options[$my_option] = '<span class="site_contact_email"><a href="mailto:'. $options[$my_option] .'"><span>'.do_shortcode($i) . $text .'</span></a></span>';
-			}
-			
-			if($my_option == 'site_contact_email2') {
-				if( !empty($my_text) ) {
-					$text = '<span class="_prefix">'.$my_text.'</span> '. '<span class="text-wrap">' .$options[$my_option] . '</span>';
-				} else {
-					$text = '<span class="text-wrap">' . $options[$my_option] . '</span>';
-				}
-				
-				if($my_icon == true) {
-					if( !empty($icon_id) ) {
-						$i = '[svg i="'.$icon_id.'" w="'.$icon_w.'" h="'.$icon_h.'"]';
-					} else {
-						$i = '<i class="fa fa-envelope"></i>';
-					}
-				} else {
-					$i = '';
-				}
-				
-				$options[$my_option] = '<span class="site_contact_email site_contact_email2"><a href="mailto:'. $options[$my_option] .'"><span>'. do_shortcode($i) . $text .'</span></a></span>';
-			}
-			
-			if($my_option == 'site_contact_email3') {
-				if( !empty($my_text) ) {
-					$text = '<span class="_prefix">'.$my_text.'</span> '. '<span class="text-wrap">' .$options[$my_option] . '</span>';
-				} else {
-					$text = '<span class="text-wrap">' . $options[$my_option] . '</span>';
-				}
-				
-				if($my_icon == true) {
-					if( !empty($icon_id) ) {
-						$i = '[svg i="'.$icon_id.'" w="'.$icon_w.'" h="'.$icon_h.'"]';
-					} else {
-						$i = '<i class="fa fa-envelope"></i>';
-					}
-				} else {
-					$i = '';
-				}
-				
-				$options[$my_option] = '<span class="site_contact_email site_contact_email3"><a href="mailto:'. $options[$my_option] .'"><span>'. do_shortcode($i) . $text .'</span></a></span>';
-			}
-			
-			if($my_option == 'site_contact_address') {
-				
-				if( !empty($my_text) ) {
-					$text = '<span class="_prefix">'.$my_text.'</span> '. '<span class="text-wrap">' .$options[$my_option] . '</span>';
-				} else {
-					$text = '<span class="text-wrap">' . $options[$my_option] . '</span>';
-				}
-				
-				if($my_icon == true) {
-					if( !empty($icon_id) ) {
-						$i = '[svg i="'.$icon_id.'" w="'.$icon_w.'" h="'.$icon_h.'"]';
-					} else {
-						$i = '<i class="fa fa-map-marker"></i>';
-					}
-				} else {
-					$i = '';
-				}
-				
-				if(!empty($options['site_contact_address_link'])) {
-					$options[$my_option] = '<span class="site_contact_address site_contact_address1"><a href="'. $options['site_contact_address_link'] .'" target="_blank"><span>' . do_shortcode($i) . $text . '</span></a></span>';
-				} else {
-					$options[$my_option] = '<span class="site_contact_address site_contact_address1"><span>' . do_shortcode($i) . $text  . '</span></span>';
-				}
-			}
-			
-			
-			if($my_option == 'site_contact_address2') {
-				
-				if($my_icon == true) {
-					if( !empty($icon_id) ) {
-						$i = '[svg i="'.$icon_id.'" w="'.$icon_w.'" h="'.$icon_h.'"]';
-					} else {
-						$i = '<i class="fa fa-map-marker"></i>';
-					}
-				} else {
-					$i = '';
-				}
-				
-				if(!empty($options['site_contact_address_link'])) {
-					$options[$my_option] = '<span class="site_contact_address site_contact_address2"><a href="'. $options['site_contact_address_link'] .'" target="_blank"><span>' . do_shortcode($i) . $options[$my_option] . '</span></a></span>';
-				} else {
-					$options[$my_option] = '<span class="site_contact_address site_contact_address2"><span>' . do_shortcode($i) . $options[$my_option] . '</span></span>';
-				}
-			}
-			
-			if($my_option == 'site_contact_address3') {
-				
-				if($my_icon == true) {
-					if( !empty($icon_id) ) {
-						$i = '[svg i="'.$icon_id.'" w="'.$icon_w.'" h="'.$icon_h.'"]';
-					} else {
-						$i = '<i class="fa fa-map-marker"></i>';
-					}
-				} else {
-					$i = '';
-				}
-				
-				if(!empty($options['site_contact_address_link'])) {
-					$options[$my_option] = '<span class="site_contact_address site_contact_address3"><a href="'. $options['site_contact_address_link'] .'" target="_blank"><span>' . do_shortcode($i) . $options[$my_option] . '</span></a></span>';
-				} else {
-					$options[$my_option] = '<span class="site_contact_address site_contact_address3"><span>' . do_shortcode($i) . $options[$my_option] . '</span></span>';
-				}
-			}
-		
-			return $options[$my_option];
-		} else {
-			return $default;
+        // Define field configurations
+        $field_configs = array(
+            'site_contact_booking' => array(
+                'default_text' => 'Book Now',
+                'default_icon' => 'fa-calendar-check-o',
+                'wrapper_class' => 'site_contact_booking',
+                'is_link' => true,
+                'link_type' => 'direct',
+                'text_only_wrap' => true, // Only wrap the text in text-wrap, no prefix
+            ),
+            'site_contact_hrs' => array(
+                'default_icon' => 'fa-clock-o',
+                'wrapper_class' => 'site_contact_hrs',
+                'is_link' => false,
+            ),
+            'site_contact_phone' => array(
+                'default_icon' => 'fa-phone',
+                'wrapper_class' => 'site_contact_phone',
+                'is_link' => true,
+                'link_type' => 'tel',
+                'link_process' => 'clean_phone',
+            ),
+            'site_contact_fax' => array(
+                'default_icon' => 'fa-fax',
+                'wrapper_class' => 'site_contact_fax',
+                'is_link' => false,
+            ),
+            'site_contact_email' => array(
+                'default_icon' => 'fa-envelope',
+                'wrapper_class' => 'site_contact_email',
+                'is_link' => true,
+                'link_type' => 'mailto',
+            ),
+            'site_contact_address' => array(
+                'default_icon' => 'fa-map-marker',
+                'wrapper_class' => 'site_contact_address',
+                'is_link' => true,
+                'link_type' => 'map',
+                'link_option' => 'site_contact_address_link',
+                'numbered_class' => 'site_contact_address1',
+            ),
+        );
+
+        // Handle numbered variations
+        foreach (['phone', 'fax', 'email', 'address'] as $base_type) {
+            for ($i = 2; $i <= 3; $i++) {
+                $key = "site_contact_{$base_type}{$i}";
+                $base_config = $field_configs["site_contact_{$base_type}"];
+                $field_configs[$key] = array_merge(
+                    $base_config,
+                    array(
+                        'wrapper_class' => "{$base_config['wrapper_class']} site_contact_{$base_type}{$i}",
+                        'numbered_class' => "site_contact_{$base_type}{$i}",
+                    )
+                );
+            }
+        }
+
+        return generate_field_output($a, $options, $field_configs);
+    }
+
+    function generate_field_output($atts, $options, $field_configs) {
+        $field_type = $atts['option_name'];
+        if (!isset($field_configs[$field_type])) {
+            return $options[$field_type];
+        }
+
+        $config = $field_configs[$field_type];
+        $value = $options[$field_type];
+        
+        // Generate icon
+        $icon = generate_icon($atts, $config['default_icon'] ?? '');
+        
+        // Generate text
+        $text = generate_text($atts, $value, $config);
+        
+        // Process link if needed
+        if ($config['is_link']) {
+            $value = generate_link($value, $config, $options, $icon . $text);
+        } else {
+            $value = '<span>' . $icon . $text . '</span>';
+        }
+
+        // Add wrapper class
+        $wrapper_class = $config['wrapper_class'];
+        if (!empty($config['numbered_class'])) {
+            $wrapper_class .= " {$config['numbered_class']}";
+        }
+
+        return sprintf(
+            '<span class="%s">%s</span>',
+            $wrapper_class,
+            $value
+        );
+    }
+
+    function generate_icon($atts, $default_icon) {
+        if (!$atts['use_icon']) {
+            return '';
+        }
+
+        if (!empty($atts['icon_id'])) {
+            return do_shortcode(sprintf(
+                '[svg i="%s" w="%s" h="%s"]',
+                $atts['icon_id'],
+                $atts['icon_w'],
+                $atts['icon_h']
+            ));
+        }
+
+        return sprintf('<i class="fa %s"></i>', $default_icon);
+    }
+
+    function generate_text($atts, $value, $config) {
+        // Handle text-only wrap case (like booking)
+        if (!empty($config['text_only_wrap'])) {
+            return sprintf(
+                '<span class="text-wrap">%s</span>',
+                !empty($atts['custom_text']) ? $atts['custom_text'] : ($config['default_text'] ?? $value)
+            );
+        }
+
+        // Regular text with optional prefix
+        $text_parts = array();
+        
+        // Add prefix if not hidden and custom text exists
+        if (!$atts['hide_prefix'] && !empty($atts['custom_text'])) {
+            $text_parts[] = sprintf('<span class="_prefix">%s</span>', $atts['custom_text']);
+        } else {
+			$text_parts[] = sprintf('<span class="_prefix hidden">%s</span>', $atts['custom_text']);
 		}
-	}
+        
+        // Add main text
+        $text_parts[] = sprintf('<span class="text-wrap">%s</span>', $value);
+        
+        return implode(' ', $text_parts);
+    }
+
+    function generate_link($value, $config, $options, $content) {
+        $href = '';
+        $target = '';
+        
+        switch ($config['link_type']) {
+            case 'tel':
+                $href = 'tel:' . preg_replace('/[^0-9]/', '', $value);
+                break;
+            case 'mailto':
+                $href = 'mailto:' . $value;
+                break;
+            case 'map':
+                if (!empty($options[$config['link_option']])) {
+                    $href = $options[$config['link_option']];
+                    $target = ' target="_blank"';
+                } else {
+                    return '<span>' . $content . '</span>';
+                }
+                break;
+            case 'direct':
+                $href = $value;
+                break;
+        }
+
+        return sprintf('<a href="%s"%s><span>%s</span></a>', $href, $target, $content);
+    }
 }
+
 add_shortcode('get_theme_option', 'sd_theme_option');
+
 
 /**
  * Return a list of linked social media icons, based on the urls provided in the Theme Options

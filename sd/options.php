@@ -167,14 +167,14 @@ $_bg_light = '#fbfbfb';
 		'type' => 'info' );
 	$options[] = array(
 		'name' => esc_html__( 'Contact Phone', 'sd' ),
-		'desc' => esc_html__( 'Enter your contact phone. To use in shortcode [get_theme_option option_name=site_contact_phone custom_text=YOUR_TEXT use_icon=TRUE icon_id=iconID icon_w=Wpx icon_h=Hpx]  if theme_url/theme-icons.svg sprite in', 'sd' ),
+		'desc' => esc_html__( 'Enter your contact phone. To use in shortcode [get_theme_option option_name=site_contact_phone custom_text=YOUR_TEXT hide_prefix="true" use_icon=TRUE icon_id=iconID icon_w=Wpx icon_h=Hpx]  if theme_url/theme-icons.svg sprite in', 'sd' ),
 		'id' => 'site_contact_phone',
 		'std' => '',
 		'type' => 'text' );
 		
 	$options[] = array(
 		'name' => esc_html__( 'Contact Email', 'sd' ),
-		'desc' => esc_html__( 'Enter your contact email. to use in shortcode [get_theme_option option_name=site_contact_email custom_text=YOUR_TEXT use_icon=TRUE icon_id=iconID icon_w=Wpx icon_h=Hpx]  if theme_url/theme-icons.svg sprite in', 'sd' ),
+		'desc' => esc_html__( 'Enter your contact email. to use in shortcode [get_theme_option option_name=site_contact_email custom_text=YOUR_TEXT hide_prefix="true" use_icon=TRUE icon_id=iconID icon_w=Wpx icon_h=Hpx]  if theme_url/theme-icons.svg sprite in', 'sd' ),
 		'id' => 'site_contact_email',
 		'std' => '',
 		'type' => 'text' );
@@ -216,28 +216,28 @@ $_bg_light = '#fbfbfb';
 
 	$options[] = array(
 		'name' => esc_html__( 'Contact Phone', 'sd' ),
-		'desc' => esc_html__( 'Enter your contact phone. To use in shortcode [get_theme_option option_name=site_contact_phone2 custom_text=YOUR_TEXT use_icon=TRUE]', 'sd' ),
+		'desc' => esc_html__( 'Enter your contact phone. To use in shortcode [get_theme_option option_name=site_contact_phone2 custom_text=YOUR_TEXT hide_prefix="true" use_icon=TRUE]', 'sd' ),
 		'id' => 'site_contact_phone2',
 		'std' => '',
 		'type' => 'text' );
 
 	$options[] = array(
 		'name' => esc_html__( 'Contact Fax', 'sd' ),
-		'desc' => esc_html__( 'Enter your contact fax. To use in shortcode [get_theme_option option_name=site_contact_fax2 custom_text=YOUR_TEXT use_icon=TRUE]', 'sd' ),
+		'desc' => esc_html__( 'Enter your contact fax. To use in shortcode [get_theme_option option_name=site_contact_fax2 custom_text=YOUR_TEXT hide_prefix="true" use_icon=TRUE]', 'sd' ),
 		'id' => 'site_contact_fax2',
 		'std' => '',
 		'type' => 'text' );
 		
 	$options[] = array(
 		'name' => esc_html__( 'Contact Email', 'sd' ),
-		'desc' => esc_html__( 'Enter your contact email. to use in shortcode [get_theme_option option_name=site_contact_email2 custom_text=YOUR_TEXT use_icon=TRUE]', 'sd' ),
+		'desc' => esc_html__( 'Enter your contact email. to use in shortcode [get_theme_option option_name=site_contact_email2 custom_text=YOUR_TEXT hide_prefix="true" use_icon=TRUE]', 'sd' ),
 		'id' => 'site_contact_email2',
 		'std' => '',
 		'type' => 'text' );
 	
 	$options[] = array(
 		'name' => esc_html__( 'Location Address', 'sd' ),
-		'desc' => esc_html__( 'Enter your physical address. To use in shortcode [get_theme_option option_name=site_contact_address2 linkto="YOUR_LINK" custom_text="YOUR_TITLE"]', 'sd' ),
+		'desc' => esc_html__( 'Enter your physical address. To use in shortcode [get_theme_option option_name=site_contact_address2 linkto="YOUR_LINK" custom_text="YOUR_TITLE" hide_prefix="true"]', 'sd' ),
 		'id' => 'site_contact_address2',
 		'std' => '',
 		'type' => 'text' );
@@ -343,7 +343,20 @@ $_bg_light = '#fbfbfb';
 		'id' => 'site_color_medium_bg',
 		'std' => $_bg_medium,
 		'type' => 'color' );
+		
+	$options[] = array(
+		'name' => esc_html__( 'Color 2', 'sd' ),
+		'desc' => esc_html__( 'Color 2', 'sd' ),
+		'id' => 'site_color_medium_bg_2',
+		'std' => $_bg_medium,
+		'type' => 'color' );
 	
+	$options[] = array(
+		'name' => esc_html__( 'Color 3', 'sd' ),
+		'desc' => esc_html__( 'Color 3', 'sd' ),
+		'id' => 'site_color_medium_bg_3',
+		'std' => $_bg_medium,
+		'type' => 'color' );
 	/* ------------ TAB Support ---*/
 	$options[] = array(
 		'name' => esc_html__( 'Support', 'sd' ),
