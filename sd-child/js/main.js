@@ -1,0 +1,518 @@
+/*
+sessionStorage.fontsLoaded&&document.documentElement.classList.add("wf-active");
+
+if (!sessionStorage.fontsLoaded) {
+*/
+	WebFontConfig = {
+		google: {
+			families: [
+				'Playfair+Display',
+				'Oxygen:400,700',
+				'Buda&display=swap'
+			]
+		},
+		active: () => {
+			sessionStorage.fontsLoaded = true
+		}
+	};
+
+	(function() {
+		var wf = document.createElement('script');
+		wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+		wf.type = 'text/javascript';
+		wf.async = 'true';
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(wf, s);
+	})();
+/*
+}
+
+/*
+var resolvedPromise = typeof Promise == 'undefined' ? null : Promise.resolve();
+var nextTick = resolvedPromise ? function(fn) { resolvedPromise.then(fn); } : function(fn) { setTimeout(fn); };
+*/
+
+
+
+window.addEventListener('load', function(){
+
+
+	jQuery(document).ready(function($) {
+
+
+		SmoothScroll({ stepSize: 20 });
+
+
+		// Today Date
+		/*
+		 * https://www.w3schools.com/Jsref/jsref_tolocalestring.asp
+		 */
+		 /*
+		var d = new Date();
+	    locale = "en-us",
+	    month = d.toLocaleString(locale, { month: "short" });
+	    console.log(month);
+	    var strDate = month + "," + d.getDate() + '/' + d.getFullYear();
+		    
+		$('.today span').text(strDate);
+		*/
+
+		/* just to hide visual loading ugly effects with logo */
+		//$("#masthead, #footercontainer").show();
+
+
+		$(window).on('load resize scroll', function(){
+			/***********************************/
+		    /* STICKY HEDAER */
+		     /*  jQuery Plugin /js/src/jquery.sticky.js */
+		    /**********************************/
+
+			$(".h-h.sticky:not(.overlapped) #masthead ").sticky({topSpacing:0});
+		});
+
+		/*
+		 * LOAD RESIZE event bindings
+		 *
+		 */
+	    
+
+
+			/*
+			 * Set height for header .h-h to avoid jump when menu is sticked
+			 * toggle screen width same as for mob menu
+			 */
+			//if( $(window).width() > 1120 ){ 
+				$('.h-h.not-overlapped').css('height',
+					$('.h-h > div').outerHeight() 
+				);
+			//}
+			/*
+			Fix bug with page reload in the middle-scrolled - to show scrolled class
+			*/
+			var el = $("body");
+			var scrollTopPos = document.documentElement.scrollTop;
+
+
+			if (scrollTopPos === 0) {
+				$(el).removeClass("scrolled");
+			} else {
+				$(el).addClass("scrolled");
+			}
+
+			
+
+
+
+		/*
+		 * SCROLL RESIZE event bindings
+		 *
+		 */
+		$(window).on('scroll resize', function(){
+
+			/*
+			 * Assign Class to header while scrolled
+			 */
+		    var el = $("body");
+			var h = 0;
+		    $(window).scroll(function(event) {
+				var scroll = $(window).scrollTop();
+				if (scroll > h ) {
+					$(el).addClass("scrolled");
+				} else {
+					$(el).removeClass("scrolled");
+				}
+		    });
+			
+			/*
+			$('section').each(function(){
+				var divPos = $(this).offset().top,
+				topOfWindow = $(window).scrollTop();
+				topOfWindow2 = topOfWindow + ($(window).height() - 300 / 2); 
+				//console.log(divPos);
+
+				if( divPos < topOfWindow2 ){
+					$(this).addClass('inview');
+				}else{
+					$(this).removeClass('inview');
+				}
+			});
+			*/
+			$('section').on('inview', function(event, isInView) {
+				if (isInView) {
+					// element is now visible in the viewport
+					$(this).addClass('inview');
+				} else {
+					// element has gone out of viewport
+					$(this).removeClass('inview');
+				}
+			});
+
+		});
+
+		/*
+		 * Create movable Tooltips - only text
+		 * add to all elems .tooltip or directly assigned
+		 */
+		$('*.tooltip, .nav-menu > li > a').hover(
+			function(){
+				var attr = $(this).attr('title');
+				if (typeof attr !== typeof undefined && attr !== false) {
+					// Hover over code
+					var title = $(this).attr('title');
+					$(this).data('tipText', title).removeAttr('title');
+					$('<p class="tooltip"></p>').text(title).appendTo('body').fadeIn('slow');
+				}
+			},
+			function() {
+				// Hover out code
+				$(this).attr('title', $(this).data('tipText'));
+				$('p.tooltip').remove();
+			})
+			.mousemove(function(e) {
+				var mousex = e.pageX; //Get X coordinates
+				var mousey = e.pageY + 15; //Get Y coordinates
+				$('p.tooltip').css({ top: mousey, left: mousex });
+			});
+
+		/* END Tooltips */
+
+
+
+		/*
+	    if( $('body:not(.page-template-contacts):not(.page-template-front-page-homebuilders)').hasClass('inner-page') ) {
+	        var title = document.querySelector('body.inner-page #page-top-image .section-title');
+	    	animateTitles(title);
+	    }
+	    */
+	    /*
+	    if( $('body').hasClass('product-template-default') ) {
+	        var title = document.querySelector('.product_title');
+	        animateTitles(title);
+	    }
+	    */
+	    
+	 
+
+
+		/* Animate PATH SVG in logo on load */
+		/*
+		var pnum = 0;
+		var $paths = $(".header-logo svg path");
+		nextFade();
+		function nextFade () {
+			$paths.eq(pnum).fadeIn(100, function() {
+				// Animation complete. Increase counter Call next fade.
+				$(this).addClass('animated');
+				pnum++;
+				if(pnum < $paths.length){
+					nextFade();
+				}
+			});
+		}
+		*/
+		/* fade slider content while scroll */
+		
+		
+		
+		$(window).scroll(function() {
+			$("#swifty-img-widget-2 ul").css("opacity", 1 - $(window).scrollTop() / 500);
+		});
+		
+		
+
+		/*
+		$('.home .owl-carousel').owlCarousel({
+			loop:false,
+			slideBy: 1,
+			items:1,
+	        itemsDesktop : [1199,1],
+	        itemsDesktopSmall : [980,1],
+	        itemsTablet: [768,1],
+	        itemsTabletSmall: false,
+	        itemsMobile : [479,1]
+		});
+		*/
+		/*
+		if( $('body').hasClass('home') ){
+			$('.slider-wrapper .sub-owl').flexslider({
+				animation: "fade",
+				animationSpeed: 300,
+				selector: "ul > li",
+				controlNav: false,
+				directionNav: true,
+				prevText:'',
+				nextText:'',
+				//minItems: 1,
+				//maxItems: 1,
+				pauseOnHover: true,
+				slideshow: true,
+				slideshowSpeed: 4000,
+				controlsContainer: $("#home-slider .custom-controls-container"),
+			});
+		}
+		*/
+		
+		
+		/*
+		$('.home #custom_html-18 .project-wrapper').owlCarousel({
+			loop:false,
+			slideBy: 1,
+			items:4,
+			dots: false,
+			responsiveClass:true,
+			responsive:{
+				0:{
+					items:1,
+				},
+				600:{
+					items:1,
+				},
+				768:{
+					items:2,
+				},
+				1000:{
+					items:4,
+				}
+			}
+		});
+		*/
+		
+		/*
+		$(".home .owl-item .slider-item .slide-content em").on({
+	        mouseenter: function(){
+				$(this).parents('.slider-item').find(".sub-owl").show();
+	        }, 
+			mouseleave: function(){
+				$(this).parents('.slider-item').find(".sub-owl").hide();
+	        }, 
+	    });
+		
+		$(".latest-projects .project-frame .proj-title").on({
+	        mouseenter: function(){
+				$(this).parents('.project-frame').addClass('hovered');
+	        }, 
+			mouseleave: function(){
+				$(this).parents('.project-frame').removeClass('hovered');
+	        }, 
+	    });
+	    */
+		
+	/*
+		var videoProjectElem = $(".project-content").hover( hoverVideo, hideVideo );
+
+		function hoverVideo(e) {  
+			$('video', this).get(0).play(); 
+		}
+
+		function hideVideo(e) {
+			$('video', this).get(0).pause(); 
+		}
+	*/	
+		//var playersrc = $('.project-frame iframe').attr('src');
+		/*
+		$('.project-frame').on('mouseover', function(){
+			var playersrc = $(this).find('iframe').attr('src');
+			$(this).find('iframe').attr('src', playersrc + '&autoplay=1');
+		});
+		$('.project-frame').on('mouseout', function(){
+			var playersrc = $(this).find('iframe').attr('src');
+			playersrc.replace('&autoplay=1','&autoplay=0');
+			$(this).find('iframe').attr('src', playersrc);
+		});
+		*/
+		/*
+		$('.project-frame').each(function(){
+			var playersrc = $(this).find('iframe').attr('src');
+			$(this).on('mouseover', function(){
+				var playersrc = $(this).find('iframe').attr('src');
+				$(this).find('iframe').attr('src', playersrc + '&autoplay=1');
+			});
+			
+			$(this).on('mouseout', function(){
+				$(this).find('iframe').attr('src', playersrc);
+			});
+			
+			console.log(playersrc);
+		});
+		*/
+
+		
+		
+	/*
+
+		$(window).on('mousewheel touchmove DOMMouseScroll', function (e) {
+			
+			var direction = (function () {
+			var delta = (e.type === 'DOMMouseScroll' ?
+							 e.originalEvent.detail * -40 :
+							 e.originalEvent.wheelDelta);
+				return delta > 0 ? 0 : 1;
+			}());
+			
+	        var scroll = $(window).scrollTop();
+	        if (scroll < 30 ) {
+	            $(header).removeClass("scrolled");
+	        } else {
+
+				if(direction === 1) {
+				   // scroll down
+				   $('#masthead').removeClass("scrolled");
+				}
+				if(direction === 0) {
+				   // scroll up
+				   $('#masthead').addClass("scrolled");
+				}
+			}
+		});
+	*/
+		// Header scrolling
+		/*
+		var lastScrollTop =  $("#masthead").outerHeight();
+		$(window).on('scroll', function() {
+			dev_window_width = $(window).width();
+			if (dev_window_width >= 959) {
+				st = $(this).scrollTop();
+				if(st < lastScrollTop) {
+					if(st == 0) {
+						$('#masthead').removeClass('scrolled');
+					}else{
+						$('#masthead').addClass('scrolled');
+					}
+		        }
+		        else {
+					$('#masthead').removeClass('scrolled');
+		        }
+		        lastScrollTop = st;
+	      } else {
+			$('#masthead').removeClass('scrolled');
+	      }
+
+		});
+		*/
+	/*
+	    var _top = 10;
+	    
+	    $(window).scroll(function(){
+	        var _cur_top = $(window).scrollTop();
+	        if(_top < _cur_top) {
+	            //_direction = 'down';
+				 $('#masthead').removeClass("scrolled");
+	        }
+	        else {
+	            //_direction = 'up';
+				$('#masthead').addClass("scrolled");
+	        }
+			//console.log(_top + ' **  ' + _cur_top);
+			_top = _cur_top;
+	        
+	    });
+
+	*/
+
+
+
+
+
+
+		
+
+		$('#scrolldown').on('click', function (e) {
+			e.preventDefault();
+			$('html, body').animate({
+				scrollTop: $('#maincontentcontainer').offset().top
+			}, 500, 'linear');
+		});
+	/*
+		$('a[href^="#"]').click(function() {
+		//if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+		  var target = $(this.hash);
+		  target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+		  if (target.length) {
+			$('html,body').animate({
+			  scrollTop: target.offset().top
+			}, 500);
+			return false;
+		  }
+		//}
+		});
+		*/
+
+		$('a[href^="#contact-form"]').on('click', function(){
+		  
+			$('html,body').animate({
+			  scrollTop: $('#contact-form').offset().top - $('#masthead').outerHeight()
+			}, 400);
+			/*
+			setTimeout(function(){
+				$('.cta aside a[href^="#"]').trigger('click');
+			}, 800);
+			*/
+			return false;
+		  
+
+		});
+
+		$('a[href^="#testimonials"]').on('click', function(){
+		  
+			$('html,body').animate({
+			  scrollTop: $('#testimonials').offset().top - $('#masthead').outerHeight()
+			}, 400);
+			/*
+			setTimeout(function(){
+				$('.cta aside a[href^="#"]').trigger('click');
+			}, 800);
+			*/
+			return false;
+		  
+
+		});
+
+		$('#filter-panel .widget-title').on('click', function(){
+			$(this).toggleClass('open');
+			$(this).next('.textwidget').toggleClass('open');
+		});
+
+		
+		$('#mobile-menu-toggler').on('click', function(){
+			$('body').toggleClass('mob-menu-opened');
+			$('#site-navigation').toggleClass('menu-opened');
+			$(this).toggleClass('toggled-on');
+			
+		});
+		
+		$('.menu-close-toggler').on('click', function(){
+			$('body').removeClass('mob-menu-opened');
+			$('#site-navigation').removeClass('menu-opened');
+			$('#mobile-menu-toggler').removeClass('toggled-on');
+			
+		});
+
+		$('.sub-menu-toggler').on('click', function(){
+			$(this).toggleClass('toggled-on');
+			$(this).next('.sub-menu').toggleClass('opened');
+		});
+
+		if( $(window).width() > 991 ) {
+			$('.search-toggler a').on('click', function(){
+				$(this).parent('li').toggleClass('toggled-on');
+				$(this).parent('li').find('.sub-menu').toggleClass('opened');
+				$(this).parent('li').find('.sub-menu').css('width', $(this).parents('.container').outerWidth());
+				return false;
+			});
+		}
+
+		if( $(window).width() < 991 ) {
+			$('.search-toggler a').on('click', function(){
+				$('.js-dgwt-wcas-enable-mobile-form').trigger('click');
+				return false;
+			});		
+		}
+
+		$('#contact-form a.buttonme').on('click', function(){
+			$(this).parents('form').find('.wpcf7-submit').trigger('click');
+			return false;
+		});
+
+		
+	});
+});

@@ -1,0 +1,42 @@
+/*
+ * Header Styles Swotcher
+ */
+
+@import "header-styles/_header_style-01";
+
+
+/*
+ * Common Styles for header main wrapper #headercontainer
+ */
+#headercontainer {
+	position: sticky;
+	top: 0;
+	z-index: 100;
+}
+
+#masthead {
+	width: 100%;
+	position: relative;
+	z-index: 10200;
+	transition: all .3s;
+}
+
+.sticky {
+	/*
+	 * If class name "sticky" added to #masthead
+	 * apply sticky rules
+	 */
+
+	#masthead {
+		@include is_body_classes(admin-bar, scrolled) {
+			top: 32px !important;
+		}
+	}
+}
+
+.overlapped {
+
+	#masthead {
+		position: fixed;
+	}
+}

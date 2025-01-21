@@ -1,0 +1,89 @@
+/*
+ 	Define vertical, horizontal, or both position inside parent elem
+ 	Using the mixin
+	.foo {
+		@include center(both); // vertical / horizontal / both
+	}
+	.foo-parent {
+		position: relative;
+	}
+ */
+
+@mixin center_me($position) {
+	position: absolute;
+	
+	@if $position == 'vertical' {
+		top: 50%;
+		-webkit-transform: translateY(-50%);
+		-ms-transform: translateY(-50%);
+		transform: translateY(-50%);
+	}
+	@else if $position == 'horizontal' {
+		left: 50%;
+		-webkit-transform: translateX(-50%);
+		-ms-transform: translateX(-50%);
+		transform: translate(-50%);
+	}
+	@else if $position == 'both' {
+		top: 50%;
+		left: 50%;
+		-webkit-transform: translate(-50%, -50%);
+		-ms-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%);
+	}
+}
+
+
+
+
+/*
+Usage 
+.foo {
+	@include relative;
+}
+
+.foo {
+	@include absolute(top 100% left 0);
+}
+
+.foo {
+	@include fixed(top 0 left 0);
+}
+*/
+
+@mixin position_me($position, $args) {
+	@each $o in top right bottom left {
+		$i: index($args, $o);
+		@if $i and $i + 1 <= length($args) and type-of(nth($args, $i + 1)) == number {
+			#{$o}: nth($args, $i + 1);
+		}
+	}
+	position: $position;
+}
+
+// Positioning helpers
+@mixin absolute($args: '') {
+	@include position_me(absolute, $args);
+}
+
+@mixin fixed($args: '') {
+	@include position_me(fixed, $args);
+}
+
+@mixin relative($args: '') {
+	@include position_me(relative, $args);
+}
+
+
+
+/*
+ Set elem full width & full height inside parent with z-index
+ */
+@mixin position_cover($zindex) {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: $zindex;
+}

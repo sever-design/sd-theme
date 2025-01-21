@@ -1,0 +1,33 @@
+.mini-cart {
+	
+	.wc-block-mini-cart__button  {
+
+		.wc-block-mini-cart__amount,
+		.wc-block-mini-cart__badge {
+			color: $_bg_light;
+		}
+
+		.wc-block-mini-cart__amount {
+			font-weight: 500;
+			font-size: 12px;
+		}
+
+		.wc-block-mini-cart__quantity-badge {
+			svg {
+				path {
+					fill: $_bg_light;
+				}
+				circle {
+					fill: $_color_accent;
+				}
+			}
+
+			.wc-block-mini-cart__badge {
+				background-color: $_color_accent;
+				font-size: 11px;
+				padding: 10px 6px;
+				text-shadow: 0 0 4px #000;
+			}
+		}
+	}
+}

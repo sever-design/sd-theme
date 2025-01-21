@@ -1,0 +1,139 @@
+// FLEX Mixins
+//https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+
+@mixin d-flex {
+	display: -webkit-flex;
+	display: flex;  /* or inline-flex */
+}
+
+/*
+ * flex wrap
+ * nowrap | wrap | wrap-reverse;
+ */
+@mixin flex-wrap($value: nowrap, $force:false) {
+	// No Webkit/FF Box fallback.
+
+	@if $force {
+		-webkit-flex-wrap: $value !important;
+		@if $value == nowrap {
+			-ms-flex-wrap: none !important;
+		} @else {
+			-ms-flex-wrap: $value!important;
+		}
+		flex-wrap: $value !important;
+	 }
+	@else {
+		-webkit-flex-wrap: $value;
+		@if $value == nowrap {
+			-ms-flex-wrap: none;
+		} @else {
+			-ms-flex-wrap: $value;
+		}
+		flex-wrap: $value;
+	} 
+}
+
+/*
+ * flex direction
+   row | row-reverse | column | column-reverse;
+ */
+@mixin flex-direction($direction, $force: false) {
+
+	@if $force {
+		-webkit-flex-direction: $direction !important;
+		flex-direction: $direction !important;
+	}
+	@else {
+		-webkit-flex-direction: $direction;
+		flex-direction: $direction;
+	}
+}
+
+/* justify-content - horizontally
+ * flex-start | flex-end | center | space-between | space-around | space-evenly | start | end | left | right ... + safe | unsafe;
+ */
+@mixin flex-justify($direction, $force: false) {
+	@if $force {
+		-webkit-justify-content: $direction !important;
+		justify-content: $direction !important;
+	}
+	@else {
+		-webkit-justify-content: $direction;
+		justify-content: $direction;
+	}
+}
+
+/*
+ * vertically align content inside flex
+ * align-content: flex-start | flex-end | center | space-between | space-around | stretch;
+ */
+@mixin align-content($direction, $force: false) {
+	@if $force {
+		-webkit-align-content: $direction !important;
+		align-content: $direction !important;
+	}
+	@else {
+		-webkit-align-content: $direction;
+		align-content: $direction;
+	}
+}
+
+@mixin flex-align($direction, $force: false) {
+	/*
+	vertically
+	align-items: flex-start | flex-end | center | baseline | stretch;
+	*/
+	@if $force {
+		-webkit-align-items: $direction !important;
+		align-items: $direction !important;
+	}
+	@else {
+		-webkit-align-items: $direction;
+		align-items: $direction;
+	}
+}
+
+/*
+ * Gap control
+ */
+@mixin flex-gap($row_gap, $col_gap) {
+  row-gap: $row_gap;
+  column-gap: $col_gap;
+}
+
+
+@mixin flexme($direction:row, $vert_align:center, $hor_align:center, $space_align:space-between, $wrap:wrap, $row_gap:0, $col_gap:0) {
+	@include d-flex;
+
+	@if $direction == row {
+		@include flex-direction(row);
+	} @else {
+		@include flex-direction($direction);
+	}
+
+	@if $vert_align == center {
+		@include align-content(center);
+	} @else {
+		@include align-content($vert_align);
+	}
+	
+	@if $hor_align == center {
+		@include flex-align(center);
+	} @else {
+		@include flex-align($hor_align);
+	}
+	
+	@if $wrap == wrap {
+		@include flex-wrap(wrap);
+	} @else {
+		@include flex-wrap($wrap);
+	}
+
+	@if $space_align == space-between {
+		@include flex-justify(space-between);
+	} @else {
+		@include flex-justify($space_align);
+	}
+
+	@include flex-gap($row_gap, $col_gap);
+}

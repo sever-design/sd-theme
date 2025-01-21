@@ -1,0 +1,165 @@
+
+/*
+ * Mobile menu toggler styles
+ */
+
+$mobmenu_txt_show: true;	/* True | False */
+$mobmenu_ico_show: true;	/* True | False */
+$mobmenu_ico_pos: right;		/* left | right */
+$mobmenu_txt_size: 16px;
+$mobmenu_txt_font: $_font_heading;	/* Inherit from main Vars or change to needed font family */
+$mobmenu_icon_color: $_color_txt;	/* Inherit from main Vars or change to needed color */
+
+.menu-toggle {
+	position: relative;
+	text-transform: uppercase;
+	cursor: pointer;
+	line-height: 1;
+	padding: 5px 10px;
+	font-size: $mobmenu_txt_size;
+	display: none;
+
+	@include screen(custom, max, $_menu_toggle_size) {
+		@include d-inline-block;
+	}
+
+	/* show / hide menu text */
+	&__toggler-txt {
+		font-family: $mobmenu_txt_font;
+		margin: 0 6px;
+
+		@if $mobmenu_txt_show {
+			display: inline;
+		} @else {
+			display: none;
+		}
+	}
+
+	/*
+	 * Style 01
+	 * simple styling with Font Awesome icons @ https://fontawesome.com/v4.7.0/cheatsheet/
+	 * icon bars: (\f0c9) / icon close: (\f00d)
+	 */
+
+	&.style-01 {
+
+		[class*="__menu-icon"] {
+			position: relative;
+			overflow: hidden;
+			width: 15px;
+			float: $mobmenu_ico_pos;
+
+			span {
+				&:before {
+					content: '\f0c9';
+					font-family: 'FontAwesome';
+					transition: all .3s;
+				}
+			}
+		}
+
+		&.toggled-on {
+			[class*="__menu-icon"] {
+				span {
+					&:before {
+						content: '\f00d';
+					}
+				}
+			}
+		}
+	}
+
+	/*
+	 * Style 02
+	 * Animated custom X and Lines icons
+	 * icon bars: 3 lines / icon close: X
+	 */
+
+	&.style-02 {
+
+		$mobmenu_line_height: 1px;
+
+		[class*="__menu-icon"] {
+			position: relative;
+			overflow: hidden;
+			width: 26px;
+			float: $mobmenu_ico_pos;
+			height: 15px;
+
+			&:before,
+			&:after {
+				content: '';
+			}
+
+			&:before,
+			&:after,
+			span {
+				display: block;
+				position: absolute;
+				width: 100%;
+				left: 0;
+				height: $mobmenu_line_height;
+				background-color: $mobmenu_icon_color;
+				transition: all .3s;
+			}
+
+			&:before {
+				top: 0;
+				transform-origin: 100% 0;
+			}
+
+			span {
+				top: calc(50% - #{$mobmenu_line_height}/2 );
+				transform-origin: 50% 50%;
+			}
+
+			&:after {
+				top: calc(100% - #{$mobmenu_line_height});
+				transform-origin: 100% 100%;
+			}
+		}
+
+		&:hover {
+
+			[class*="__menu-icon"] {
+
+				&:before {
+					transform: rotate(-20deg) translateX(6px);
+				}
+
+				span {
+					transform: translateX(6px);
+					width: 60%;
+				}
+
+				&:after {
+					transform: rotate(20deg) translateX(6px);
+				}
+			}
+
+		}
+
+		&.toggled-on {
+
+			[class*="__menu-icon"] {
+
+				&:before {
+					transform: rotate(27deg) translateX(0);
+					transform-origin: 50% 50%;
+					top: 50%;
+				}
+
+				span {
+					transform: translateX(0);
+					width: 0;
+				}
+
+				&:after {
+					transform: rotate(-27deg) translateX(0);
+					transform-origin: 50% 50%;
+					top: 50%;
+				}
+			}
+		}
+	}
+}

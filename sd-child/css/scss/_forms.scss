@@ -1,0 +1,226 @@
+
+/*
+ * INPUT PLACEHOLDERS
+ * Styles for input placeholders
+ * do not combine - not working
+ */
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+	color: $_bg_light_3;
+}
+::-moz-placeholder { /* Firefox 19+ */
+	color: $_bg_light_3;
+}
+:-ms-input-placeholder { /* IE 10+ */
+	color: $_bg_light_3;
+}
+:-moz-placeholder { /* Firefox 18- */
+	color: $_bg_light_3;
+}
+
+/*
+ * INPUT FIELDS
+ * Common styles for input fields
+ *
+ */
+
+span[class*="mathcaptcha"] {
+
+	&, & * {
+		display: inline-block !important;
+		vertical-align: middle;
+	}
+
+	.wpcf7-mathcaptcha {max-width: 60px !important;}
+}
+
+.wpcf7-radio {
+	display: block;
+	cursor: pointer; 
+	user-select:none;
+	text-align: left;
+
+	&+.radio{
+		margin-top: 12px;
+	}
+
+	input{
+		display: none;
+
+		& + span {
+			display: inline-block; 
+			position: relative;
+			padding-left: 30px;
+
+				&:before{
+					content: '';
+					display: block; 
+					position: absolute;
+					top: 0px;
+					left: 0px;
+					border-radius: 50%;
+					margin-right: 5px;
+					width: 28px;
+					height: 28px;
+					border: 1px solid #ccc;
+					background: #fff;
+				}
+				&:after{
+					content: '';
+					display: block; 
+					width: 18px;
+					height: 18px;
+					background: #222;
+					position: absolute;
+					border-radius: 50%;
+					top: 5px;
+					left: 5px;
+					opacity: 0;
+					transform: scale(0,0); 
+					transition: all .2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
+				}
+		}
+
+		&:checked+span:after{
+			opacity: 1;
+			transform: scale(1,1);
+		}
+	}
+}
+/* END CHECKBOX STYLE */
+
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+select,
+textarea {
+	width: 100%;
+	display: block;
+	padding: 10px;
+	color: $_bg_light_3 !important;
+	max-width: 100%;
+	min-height: 44px;
+	border: 0  !important;
+	border-bottom: 1px solid $_bg_light_2 !important;
+	background: $_bg_light;
+	//box-shadow: 0 0 5px 0 $_color_txt_light;
+	font-family: $_font_base;
+	font-weight: 400;
+	@include fluid-type($_screen_min_width, $_screen_max_width, 14px, 16px);
+}
+
+select {
+	-webkit-appearance: menulist;
+	-moz-appearance: menulist;
+	appearance: menulist;
+	
+	option {
+		color: $_color_txt;
+	}
+}
+
+textarea {
+	max-height: 145px;
+	min-height: 145px !important;
+	min-width: 100%;
+	max-width: 100%;
+	width: 100%;
+}
+
+input[type="submit"] {
+	@extend .buttonme;
+}
+
+/*
+ * Datepicker for CF7
+ *
+ */
+.ui-datepicker { font-size: 14px !important; }
+
+/*
+ * BUTTON'S STYLE
+ * Inlcude predefined styles
+ */
+
+
+
+
+/*
+ * CF7 Styles
+ */
+
+.wpcf7 {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+
+
+	input[type="submit"] {
+		display: none;
+	}
+
+	&-form {
+		padding-bottom: 40px;
+		position: relative;
+	}
+
+	&-spinner {
+		background-color: #000;
+		@include border-radius(50%);
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		opacity: 1;
+		z-index: 22;
+		box-shadow: 0 0 5px 2px #fff;
+		transform: translate(-50%,-50%);
+		margin: 0;
+
+		&:before {
+			background: #fff;
+		}
+	}
+
+	&-response-output {
+		margin: 0 auto;
+		text-align: center;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		background: #fff;
+		font-size: 15px;
+		color: $_color_txt;
+	}
+
+	&-validation-errors {
+		background: #fff;
+		font-weight: 700;
+	}
+
+	&-form-control-wrap {
+		display: block;
+		position: relative;
+	}
+
+	&-not-valid-tip {
+		@include d-inline-block;
+		background: #fff;
+		padding: 3px;
+		text-transform: uppercase;
+		margin: 5px;
+		font-size: 11px;
+		font-weight: 700;
+		position: absolute;
+		bottom: 0;
+		right: 0;
+	}
+
+	p {
+		margin-bottom: 15px;
+	}
+
+
+}

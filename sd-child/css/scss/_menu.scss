@@ -1,0 +1,107 @@
+/*
+ * Desktop & Mobile menu styles
+ * choose style from ready-made 01 ... XX for each
+ */
+
+.main-header__menu {
+
+	.menu {
+		/*
+		 * If theres a hamburger menu by default
+		 * then SHOW mobile toggle button & hide main navigation
+		 */
+		// define wheather to show the Menu Toggler btn by default TRUE or FALSE
+		$_mt_by_default: false;
+
+		@if $_mt_by_default == false {
+
+			/*
+			 * if not hamburger by default
+			 * toggle to mob menu after $_mobile_menu_toggle_screen_size is reached
+			 *
+			 * when toggle from Dsk to Mob menu view
+			 * $_mobile_menu_toggle_screen_size - defined in /scss/_vars.scss
+			 *
+			 */
+			&__toggle {
+				display: none;
+
+				//@include is_mobile { @include d-inline-block; }
+
+				@include screen(custom, max, $_mobile_menu_toggle_screen_size) {
+					@include d-inline-block;
+				}
+			}
+			&__main-navigation {
+				display: block;
+
+				@include screen(custom, max, $_mobile_menu_toggle_screen_size) {
+					display: none;
+				}
+
+			    &.menu-opened {
+			    	display: block;
+			    }
+
+			}
+		} @else {
+			/*
+			 * if hamburger by default
+			 * display Mobile Toggler Button & Hide the main nav
+			 */
+			&__toggle { @include d-inline-block; }
+			&__main-navigation { display: none; }
+		}
+
+		/*
+		 * Assign chosen styles for Mobile Toggler Btn & Main Navigation
+		 */
+
+		&__toggle {
+			/*
+			 * Style for Mobile Toggler Button
+			 * <button> ID: #mobile-menu-toggler
+			 * Choose from 01-XX / Add more own styles if needed
+			 */
+			 
+			@import "menu-mobile-toggler-styles/_menu_mobile-toggler-btn_style-04";
+		}
+
+		&__main-navigation {
+			/*
+			 * Style for Main Navigation
+			 * <div> ID: #site-navigation
+			 * Choose from 01-XX / Add more own styles if needed
+			 */
+			
+			@media screen and (min-width: $_mobile_menu_toggle_screen_size + px) {
+				@import "menu-styles/_menu-style-01";
+			}
+
+			@media screen and (max-width: $_mobile_menu_toggle_screen_size + px) {
+				@import "menu-styles/_menu-style-03_mobile";
+			}
+
+			@include is_body_class(mob_menu_opened) {
+				@import "menu-styles/_menu-style-03_mobile";
+			}
+		}
+	}
+	
+ 	/* style for faded block to close menu by click Away-click */
+	.menu-close-toggler {
+		display: none;
+		@include to-rgba(#000,.35);
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		z-index: 10200;
+		top: 0;
+		left: 0;
+
+		@include is_body_class(mob-menu-opened) {
+			display: block;
+			backdrop-filter: blur(2px);
+		}
+	}
+}	

@@ -1,0 +1,1 @@
+WOW.prototype.addBox=function(t){this.boxes.push(t)};var wow=new WOW;wow.init(),$(".wow").hasClass("animated")&&($(this).removeClass("animated"),$(this).removeAttr("style"),(new WOW).init());

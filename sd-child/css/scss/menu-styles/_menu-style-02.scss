@@ -1,0 +1,205 @@
+/*
+ * Desktop Menu Style
+ * STYLE 02
+ *
+ * 01. Structure
+ * 02. Styles
+ *
+ * id="#site-navigation"
+ * & = .menu__main-navigation 
+ */
+
+/*
+ * local VARs
+ */
+
+$_iconic_font_family:   'FontAwesome';      // use here any iconic font and ita value for $_dsk_dropdown_icon
+$_dsk_dropdown_icon:    '\f0d7';            //fa-caret-down [&#xf0d7;]
+
+& {
+    position: relative;
+
+    /*
+     * 01. Structure & Behavior
+     * Column drop-down menu - 2nd items as cols, 3rd items as list
+     *
+     *  [-parent-] [parent] [parent] [parent] ..
+     *  [--•child•--] [--•child•--] [--•child•--]
+     *  [-•sub-child] [-•sub-child] [-•sub-child]
+     *  [-•sub-child] [-•sub-child] 
+     *  [-•sub-child]
+     */
+
+    menu {
+
+        &.nav-menu {
+            position: relative; // pos:rel use here to have dropdown full width of main container
+
+            // common props for elems
+            li[class*="children"] {
+
+                .sub-menu {
+                    display: none;
+                }
+            }
+            // end common props for elems
+
+
+            & > li {
+                // 1st level menu - root items
+                @include d-inline-block;                
+
+                & > a {
+                    display: block;
+                }
+
+                &[class*="children"] {
+
+                    & > a {
+                        @include d-inline-block;
+                    }
+
+                    & > .sub-menu-toggler {
+                        @include d-inline-block;
+
+                        &:after {
+                            content: $_dsk_dropdown_icon;
+                            font-family: $_iconic_font_family;
+                        }
+                    }
+
+                    &:hover {
+                        & > .sub-menu {
+                            @include flexme($direction:row, $hor_align:flex-start);
+                        }
+                    }
+
+                    & > .sub-menu {
+                        // 2nd level menu - sub-menu items
+                        top: 100%;
+                        left: 0;
+                        position: absolute;
+                        width: 100%;
+                        
+
+                        & > li {
+                            $_children_amount: 3;
+                            width: calc(100% / #{$_children_amount});
+
+                            & > a {
+
+                            }
+
+                            &[class*="children"] {
+
+                                & > a {
+                                    @include d-inline-block;
+                                }
+
+                                & > .sub-menu-toggler {
+                                    @include d-inline-block;
+
+                                    &:after {
+                                        content: $_dsk_dropdown_icon;
+                                        font-family: $_iconic_font_family;
+                                    }
+                                }
+
+                                &:hover {
+                                    & > .sub-menu {
+                                        display: block;
+                                    }
+                                }
+
+                                & > .sub-menu {
+                                    // 3rd level menu - sub-sub-menu items
+                                    
+
+                                    & > li {
+
+                                        & > a {
+
+                                        }
+                                    }
+                                } // 3rd lvl sub-menu end
+                            } // 3rd li.children end
+                        } // li 2nd lvl end
+                    } // 2nd sub-menu end
+                }// 1st .children end
+            }// 1st lvl end
+        } // .nav-menu end
+    }
+
+
+    /*
+     * 02. Styles Colors, Background, Fonts & Sizes
+     */
+   menu {
+
+        &.nav-menu {
+            text-align: center;
+
+            // common props for elems
+
+            // end common props for elems
+
+            & > li {
+                // 1st level menu - root items
+                @include d-inline-block
+
+                & > a {
+                    
+                }
+
+                &[class*="children"] {
+
+                    & > a {
+                        
+                    }
+
+                    & > .sub-menu-toggler {
+                        
+                        &:after {
+
+                        }
+                    }
+
+                    & > .sub-menu {
+                        // 2nd level menu - sub-menu items
+
+                        & > li {
+
+                            & > a {
+
+                            }
+
+                            &[class*="children"] {
+
+                                & > a {
+                                }
+
+                                & > .sub-menu-toggler {
+
+                                    &:after {
+
+                                    }
+                                }
+
+                                & > .sub-menu {
+                                    // 3rd level menu - sub-sub-menu items
+
+                                    & > li {
+
+                                        & > a {
+
+                                        }
+                                    }
+                                } // 3rd lvl sub-menu end
+                            } // 3rd li.children end
+                        } // li 2nd lvl end
+                    } // 2nd sub-menu end
+                }// 1st .children end
+            }// 1st lvl end
+        } // .nav-menu end
+    }
+}

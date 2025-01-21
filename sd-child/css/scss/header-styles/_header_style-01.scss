@@ -1,0 +1,117 @@
+/* STYLE 01
+ * header structure style 01
+ * inlcusion for: _header.scss str: 42
+ * & = .main-header 
+ * very simple structure:
+       [logo]
+       [menu]
+ */
+
+
+.main-header {
+    //@include background-gradient($_header_bg_color, $_header_bg_color_2, 'vertical');
+    //background: $_bg_dark;
+    padding: 0;
+
+    @include is_body_class(scrolled) {
+        background: $_bg_light;
+    }
+
+    &__nav-bar {
+        background: $_bg_light;
+    }
+
+    &__contact-bar {
+        background: $_color_accent;
+
+        .main-header__contact {
+            @include flexme;
+            width: 100%;
+            padding: 5px 0;
+
+            .tagline {
+                font-weight: 500;
+                color: $_bg_light;
+                padding: 5px 10px;
+
+                @include screen(custom, max, 750) {
+                    display: none;
+                }
+            }
+
+            .site_contact_phone {
+                padding: 5px 10px;
+
+                @include screen(custom, max, 750) {
+                    display: block;
+                    width: 100%;
+                    text-align: center;
+                }
+
+                i {
+                    color: $_bg_light;
+                    font-size: 86%;
+                    margin-right: 8px;
+                    animation: wobble 1s infinite;
+                }
+
+                a {
+                    font-weight: 600;
+                    color: $_bg_light;
+
+                    &:hover {
+                        color: $_color_txt;
+                    }
+                }
+            }
+        }
+    }
+
+	&__nav-wrapper {
+        @include max-width($_theme_max_content_width);
+        @include flexme;
+        padding: 0 15px;
+	}
+
+    &__logo {
+        order: 1;
+        padding: 15px 0 0 0;
+
+        &__link {
+            display: block;
+            padding: 10px 15px;
+
+
+            img {
+                max-width: 120px;
+
+                @include is_body_class(scrolled) {
+                    //content: url($_img_path + 'logo-scrolled.svg');
+                }
+
+                 @include screen(custom, max, 600) {
+                    max-width: 120px;
+                 }
+            }
+        }
+    }
+
+    &__menu {
+        flex: .9;
+        order: 2;
+
+        @include screen(custom, max, $_mobile_menu_toggle_screen_size) {
+            flex: unset;
+            order: 3;
+        }
+    }
+
+    &__buttons-wrapper {
+        padding: 10px 15px;
+        order: 3;
+
+        @include screen(custom, max, $_mobile_menu_toggle_screen_size) {
+            display: none;
+        }
+    }
+}

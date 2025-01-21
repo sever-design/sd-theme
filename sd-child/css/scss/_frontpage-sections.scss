@@ -1,0 +1,198 @@
+#intro {
+	padding: 0 !important;
+
+	.slider__wrapper {
+		@include max-width(1980px);
+
+		.swifty_imgwidget_ul {
+
+			.owl-dots {
+				position: absolute;
+				bottom:0;
+				padding: 15px;
+				text-align: center;
+				width: 100%;
+
+
+				> button {
+					@include d-inline-block;
+					width: 38px;
+					height: 12px;
+					background: $_bg_light;
+					margin: 10px 8px;
+
+					&.active {
+						background: $_color_accent;
+					}
+				}
+			}
+
+			.owl-item {
+				> li {
+					min-height: 75vh;
+					padding: 24% 0 35px;
+					position: relative;
+					overflow: hidden;
+					background: $_color_txt;
+
+
+					@include screen(custom, max, 1023) {
+						padding-top: 60%;
+					}
+
+					img {
+						position: absolute;
+						top: 0;
+						left: 0;
+						width: 100%;
+						height: 100%;
+						object-fit: cover;
+						z-index: 1;
+						opacity: .8;
+					}
+
+					> .sbcaption {
+						position: relative;
+						z-index: 2;
+						opacity: 0;
+						transform: translateY(100%);
+						transition: opacity .3s, transform .3s;
+						padding: 0 5%;
+
+						> div {
+							@include max-width(1280px);
+							text-align: center;
+							background: rgba(255,255,255,.82);
+							padding: 25px 5%;
+							@include border-radius($_theme_border_radius $_theme_border_radius 0 0);
+
+							h2 {
+								@include fluid-type($_screen_min_width, $_screen_max_width, 30px, 66px);
+								margin: 0 0 25px 0;
+								@extend .title;
+								@include max-width(780px);
+								color: $_color_accent;
+							}
+
+							p {
+								font-weight: 500;
+								@include fluid-type($_screen_min_width, $_screen_max_width, 16px, 22px);
+							}
+						}
+					}
+				}
+
+				&.active {
+					> li {
+						> .sbcaption {
+							opacity: 1;
+							transform: translateY(0);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+#about {
+
+	ol.wp-block-list {
+		> li {
+			margin-bottom: 15px;
+			font-size: 110%;
+
+			strong {
+				display: block;
+				color: $_color_accent;
+			}
+		}
+	}
+
+	.main-title {
+		@include background-gradient($_color_accent, $_bg_dark, 'horizontal');
+	}
+	h1 {
+		color: $_bg_dark
+	}
+
+	h2 {
+		color: $_color_accent;
+	}
+
+	span[class*="site_contact_"] {
+		display: block;
+		margin: 5px 0 15px;
+
+		a {
+			@include d-inline-block;
+			color: $_color_accent;
+
+			> span {
+				display: block;
+				position: relative;
+				padding: 0 0 0 25px;
+			}
+
+			i {
+				display: block;
+				color: $_bg_dark;
+				position: absolute;
+				top: 5px;
+				left: 0;
+			}
+
+			._prefix {
+				display: block;
+				color: $_bg_dark;
+				font-size: 80%;
+				font-weight: 500;
+				text-transform: uppercase;
+			}
+
+			.text-wrap {
+				color: $_color_txt;
+				font-weight: 600;
+			}
+		}
+	}
+
+	.cta-block {
+		.site_contact_phone {
+			font-size: 160%;
+
+			a {
+				> span {
+					padding: 0 0 0 65px;
+				}
+
+				i {
+					font-size: 44px;
+				}
+
+				&:hover {
+					i, .text-wrap {
+						color: $_color_accent;
+					}
+
+					i {
+						animation: wobble 1s infinite;
+					}
+				}
+			}
+		}
+	}
+
+	.contact-form-wrapper {
+		.wp-block-cover__inner-container {
+			outline: 2px solid $_bg_light;
+			@include border-radius($_theme_border_radius);
+
+			.buttonme {
+				a {
+					outline: 2px solid $_bg_light;
+				}
+			}
+		}
+	}
+}

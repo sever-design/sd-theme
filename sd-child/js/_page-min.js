@@ -1,0 +1,1 @@
+jQuery(document).ready(function(e){e(window).on("load resize",function(){e(window).width()>991&&e(".inner-page #page-top-image").stellar({horizontalOffset:0,verticalOffset:-400})});var t=document.querySelector(".section-title");animateTitles(t),e.stellar({horizontalScrolling:!1,responsive:!0})});

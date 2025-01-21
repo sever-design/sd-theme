@@ -1,0 +1,34 @@
+
+I found a solution that works on jQuery 3.4.1 slim
+
+After un-minifying, add {passive: true} to the addEventListener function on line 1567 like so:
+
+t.addEventListener(p, a, {passive: true}))
+
+Nothing breaks and lighthouse audits don't complain about the listeners.
+
+
+jQuery.event.special.touchstart = {
+    setup: function( _, ns, handle ) {
+        this.addEventListener("touchstart", handle, { passive: !ns.includes("noPreventDefault") });
+    }
+};
+jQuery.event.special.touchmove = {
+    setup: function( _, ns, handle ) {
+        this.addEventListener("touchmove", handle, { passive: !ns.includes("noPreventDefault") });
+    }
+};
+jQuery.event.special.wheel = {
+    setup: function( _, ns, handle ){
+        this.addEventListener("wheel", handle, { passive: true });
+    }
+};
+jQuery.event.special.mousewheel = {
+    setup: function( _, ns, handle ){
+        this.addEventListener("mousewheel", handle, { passive: true });
+    }
+};
+
+
+count all dome in dev tools
+document.getElementsByTagName("*").length

@@ -1,0 +1,1 @@
+jQuery(document).ready(function(i){i("body").on("click",".plus",function(){var n=i(this).siblings(".qty"),s=parseInt(n.val(),10);isNaN(s)||n.val(s+1)}),i("body").on("click",".minus",function(){var n=i(this).siblings(".qty"),s=parseInt(n.val(),10);!isNaN(s)&&s>1&&n.val(s-1)})});

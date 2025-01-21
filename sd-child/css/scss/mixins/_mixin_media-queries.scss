@@ -1,0 +1,104 @@
+/*
+	Media Queries
+
+Using the mixin
+.foo {
+	@include screen(large) {
+		width: 20%;
+}
+@include screen(med) {
+	width: 40%;
+}
+@include screen(med-small) {
+	width: 60%;
+}
+@include screen(small) {
+	width: 80%;
+}
+@include screen(custom, max, 400) {
+	width: 100%;
+}
+*/
+@mixin screen($size, $type: max, $pixels: $breakpoint-small) {
+
+	@if $size == 'small' {
+		@media screen and ($type + -width: $breakpoint-small) {
+				@content;
+		}
+	}
+	@else if $size == 'med-small' {
+		@media screen and ($type + -width: $breakpoint-med-small) {
+				@content;
+		}
+	}
+	@else if $size == 'med' {
+		@media screen and ($type + -width: $breakpoint-med) {
+				@content;
+		}
+	}
+ @else if $size == 'large' {
+		@media screen and ($type + -width: $breakpoint-med) {
+				@content;
+		}
+	}
+	@else if $size == 'custom' {
+		@media screen and ($type + -width: $pixels + px) {
+		 @content;
+		}
+	}
+	@else {
+		@content;
+	}
+}
+
+/*
+Just an orientation
+usage
+@include orientation(portrait) {
+  body {
+    background-color: lightblue;
+  }
+  .example {
+    font-size: 18px;
+  }
+}
+*/
+@mixin orientation($type) {
+	@if $type == portrait {
+		@media screen and (orientation: portrait) {
+			@content;
+		}
+	} @else if $type == landscape {
+		@media screen and (orientation: landscape) {
+	  		@content;
+		}
+	} @else {
+		@error "Invalid orientation type. Please use 'portrait' or 'landscape'.";
+	}
+}
+
+/*
+Orientation + Screen Size Combined
+usage
+@include screen-with-orientation('custom', 'landscape', 'max', 1023) {
+  body {
+    background-color: lightblue;
+  }
+}
+*/
+
+@mixin screen-with-orientation($size, $orientation: portrait, $type: max, $pixels: null) {
+  @if $size == 'custom' {
+    @include screen('custom', $type, $pixels) {
+      @media screen and (orientation: #{$orientation}) {
+        @content;
+      }
+    }
+  } @else {
+    @include screen($size, $type) {
+      @media screen and (orientation: #{$orientation}) {
+        @content;
+      }
+    }
+  }
+}

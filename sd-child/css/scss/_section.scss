@@ -1,0 +1,14 @@
+#maincontentcontainer {
+	> section {
+		@include max-width(2000px);
+		padding: 0 7%;
+
+		@include screen(custom, max, 1280) {
+			padding: 0 4%;
+		}
+
+		> div {
+			@include max-width($_theme_max_content_width);
+		}
+	}
+}

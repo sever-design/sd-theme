@@ -1,0 +1,12 @@
+/*
+ * SRC: mixins/mixin_font
+ * USAGE: @include font-face('gotham', '/fonts/gotham');
+ */
+
+$font_dir: '../fonts/';
+
+@include font-face('medicom',  $font_dir + 'medicom', 400);
+
+//@include font-face('migharegular',        $font_dir + 'migha-regularcntr-webfont', 400);
+//@include font-face('Avenir Next LT Pro',  $font_dir + 'AvenirNextLTPro-Regular', 400);
+//@include font-face('Avenir Next LT Pro',  $font_dir + 'AvenirNextLTPro-Bold', 700);

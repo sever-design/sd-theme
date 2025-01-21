@@ -1,0 +1,254 @@
+/*
+ * Desktop Menu Style
+ * STYLE 01
+ *
+ * 01. Layout
+ * 02. Styles 
+ *
+ * id="#site-navigation"
+ * & = .menu__main-navigation 
+ */
+
+/*
+ * local VARs
+ */
+
+$_iconic_font_family:   'FontAwesome';      // use here any iconic font and ita value for $_dsk_dropdown_icon
+$_dsk_dropdown_icon:    '\f078';            //fa-caret-down [&#xf0d7;]
+
+& {
+    position: relative;
+
+    /*
+     * 01. Structure & Behavior
+     * Simple drop-down menu - classic style
+     *
+     *  [parent] [parent] [parent] [parent]
+     *  [•child]
+     *  [•child]
+     *  [•child][•sub-child]
+     *          [•sub-child]
+     *
+     */
+
+    menu {
+
+        &.nav-menu {
+            text-align: center;
+
+            // common props for elems
+            li[class*="children"] {
+                position: relative;
+
+                .sub-menu {
+                    position: absolute;
+                    display: none;
+                }
+
+                &:hover {
+                    & > .sub-menu {
+                        display: block;
+                    }
+                }
+            }
+            // end common props for elems
+
+
+            & > li {
+                // 1st level menu - root items
+                @include d-inline-block;
+                margin: 0 10px;
+
+
+                & > a {
+                    color: $_color_txt;
+                    display: block;
+                    padding: 10px 15px;
+                    display: block;
+                    font-weight: 600;
+                    @include fluid-type($_screen_min_width, $_screen_max_width, 18px, 20px);
+                }
+
+                &:hover {
+                    > a {
+                        color: $_color_accent;
+                    }
+
+                    & > .sub-menu-toggler {
+                        &:after {
+                            color: $_color_accent !important;
+                        }
+                    }
+                }
+
+                &[class*="current"] {
+                    > a {
+                        color: $_bg_dark;
+                    }
+                }
+
+                &[class*="children"] {
+
+                    & > a {
+                        @include d-inline-block;
+                        padding-right: 8px;
+                    }
+
+                    & > .sub-menu-toggler {
+                        @include d-inline-block;
+                        font-size: 8px;
+
+                        &:after {
+                            content: $_dsk_dropdown_icon;
+                            font-family: $_iconic_font_family;
+                            color: $_bg_light;
+
+                            @include is_body_class(scrolled) {
+                                color: $_bg_dark;
+                            }
+                        }
+                    }
+
+                    & > .sub-menu {
+                        // 2nd level menu - sub-menu items
+                        top: 100%;
+                        left: 0;
+                        background: $_bg_light;
+                        width: 680px;
+                        padding: 25px 15px;
+
+                        & > li {
+                            @include d-inline-block;
+                            width: 49%;
+                            vertical-align: top;
+                            padding: 0 15px;
+
+                            &[class*="children"] {
+
+                                & > a {
+                                    display: block;
+                                    text-align: left;
+                                    @include fluid-type($_screen_min_width, $_screen_max_width, 14px, 16px);
+                                    font-weight: 500;
+                                    color: $_color_accent;
+                                    pointer-events: none;
+                                }
+
+                                & > .sub-menu-toggler {
+                                    @include d-inline-block;
+                                    display: none;
+
+
+                                    &:after {
+                                        content: $_dsk_dropdown_icon;
+                                        font-family: $_iconic_font_family;
+                                        transform: rotate(-90deg);
+                                        display: block;
+                                    }
+                                }
+
+                                & > .sub-menu {
+                                    // 3rd level menu - sub-sub-menu items
+                                    position: relative;
+                                    display: block;
+                                    margin-top: 20px;
+
+                                    & > li {
+
+                                        & > a {
+                                            display: block;
+                                            text-align: left;
+                                            font-weight: 400;
+                                            color: $_bg_dark;
+                                            padding: 8px 0;
+                                            @include fluid-type($_screen_min_width, $_screen_max_width, 16px, 18px);
+                                        }
+
+                                        &:hover,
+                                        &[class*="current"] {
+                                            > a {
+                                                color: $_color_accent;
+                                            }
+                                        }
+                                    }
+                                } // 3rd lvl sub-menu end
+                            } // 3rd li.children end
+                        } // li 2nd lvl end
+                    } // 2nd sub-menu end
+                }// 1st .children end
+            }// 1st lvl end
+        } // .nav-menu end
+    }
+
+
+    /*
+     * 02. Styles Colors, Background, Fonts & Sizes
+     */
+   menu {
+
+        &.nav-menu {
+
+            // common props for elems
+
+            // end common props for elems
+
+            & > li {
+                // 1st level menu - root items
+                @include d-inline-block;
+
+                & > a {
+                    
+                }
+
+                &[class*="children"] {
+
+                    & > a {
+                        
+                    }
+
+                    & > .sub-menu-toggler {
+                        
+                        &:after {
+
+                        }
+                    }
+
+                    & > .sub-menu {
+                        // 2nd level menu - sub-menu items
+
+                        & > li {
+
+                            & > a {
+
+                            }
+
+                            &[class*="children"] {
+
+                                & > a {
+                                }
+
+                                & > .sub-menu-toggler {
+
+                                    &:after {
+
+                                    }
+                                }
+
+                                & > .sub-menu {
+                                    // 3rd level menu - sub-sub-menu items
+
+                                    & > li {
+
+                                        & > a {
+
+                                        }
+                                    }
+                                } // 3rd lvl sub-menu end
+                            } // 3rd li.children end
+                        } // li 2nd lvl end
+                    } // 2nd sub-menu end
+                }// 1st .children end
+            }// 1st lvl end
+        } // .nav-menu end
+    }
+}

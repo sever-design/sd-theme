@@ -1,0 +1,79 @@
+.instagram-content-line {
+	overflow: hidden;
+	padding: 15px 0 35px;
+	margin-top: 75px;
+	background: #000;
+
+	.container-fluid{
+		padding: 0;
+	}
+
+	.hs-texts {
+		text-align: center;
+
+		h2,
+		h2 span {
+			font-weight: 400;
+			@include fluid-type($min_width, $max_width, 22px, 36px);
+			color: #fff;
+		}
+
+		.widget-title {
+			letter-spacing: normal;
+			color: #fff;
+
+			a {
+				background: #fff;
+			}
+		}
+
+	}
+
+	#sb_instagram {
+		background: #000;
+	}
+
+	#sbi_images {
+		display: block;
+		padding: 0;
+		
+
+		.sbi_item {
+
+			@include screen(custom, max, 480) {
+				width: 33% !important;
+			}
+
+			a {
+				@include screen(custom, max, 480) {
+					height: 0 !important;
+					padding-top: 100%;
+					overflow: hidden;
+					position: relative;
+				}
+
+				img {
+
+					@include screen(custom, max, 480) {
+						position: absolute;
+						top: 0;
+						left: 0;
+						width: 100%;
+						height: 100%;
+						object-fit: cover;
+					}
+
+				}
+			}
+		}
+	}
+
+	#sbi_load {
+		.sbi_load_btn,
+		.sbi_follow_btn a {
+			border-radius: 0 !important;
+			background: $_dark_bg !important;
+			color: #fff !important; 
+		}
+	}
+}

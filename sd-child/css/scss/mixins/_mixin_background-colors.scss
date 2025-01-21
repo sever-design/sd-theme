@@ -1,0 +1,52 @@
+/*
+ Simple two colors gradient
+
+	Usage:
+	$start-color, $end-color, $orientation - vertical/horizontal/radial
+	.foo {
+		@include background-gradient(red, black, 'vertical');
+	}
+	Output
+	.foo {
+		background: -webkit-linear-gradient(top, red, black);
+		background: linear-gradient(to bottom, red, black);
+	}
+*/
+
+@mixin background-gradient($start-color, $end-color, $orientation) { 
+		background: $start-color;
+
+		@if $orientation == 'vertical' {
+			background: -webkit-linear-gradient(top, $start-color, $end-color);
+			background: linear-gradient(to bottom, $start-color, $end-color);
+		} @else if $orientation == 'horizontal' {
+			background: -webkit-linear-gradient(left, $start-color, $end-color);
+			background: linear-gradient(to right, $start-color, $end-color);
+		} @else {
+			//background: -webkit-radial-gradient(center, ellipse cover, $start-color, $end-color);
+			//background: radial-gradient(ellipse at center, $start-color, $end-color);
+			background: -webkit-linear-gradient($orientation, $start-color, $end-color);
+			background: linear-gradient($orientation, $start-color, $end-color);
+		}
+}
+
+
+/*
+ Convert color to rgb with opacity (RGBA)
+	usage:
+	@include to-rgba(#333333, 0.5);
+
+	will render
+	background-color: #333333;
+	background-color: rgba(51, 51, 51, 0.5);
+*/
+
+@mixin to-rgba($hexcolor, $opacity) {
+	background-color: $hexcolor;
+	background-color: rgba($hexcolor, $opacity); 
+}
+
+@function hex-to-rgba($hexcolor, $opacity) {
+  @return rgba(red($hexcolor), green($hexcolor), blue($hexcolor), $opacity);
+}
+

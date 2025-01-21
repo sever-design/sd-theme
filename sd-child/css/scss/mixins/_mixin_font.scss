@@ -1,0 +1,90 @@
+/* Fluid Text size
+
+https://css-tricks.com/snippets/css/fluid-typography/
+Usage 
+
+Define vars in _VARS.scss file 
+
+$_screen_min_width: 320px;
+$_screen_max_width: 1200px;
+$min_font: 16px;
+$max_font: 24px;
+
+.class {
+	@include fluid-type($_screen_min_width, $_screen_max_width, 13px, 50px);
+}
+
+*/
+@use "sass:math";
+
+@function strip-unit($value) {
+	//@return $value / ($value * 0 + 1);
+	@return math.div( $value, $value * 0 + 1);
+	//@return calc( $value / ($value * 0 + 1));
+}
+
+@mixin fluid-type($min-vw, $max-vw, $min-font-size, $max-font-size) {
+
+	$u1: unit($min-vw);
+	$u2: unit($max-vw);
+	$u3: unit($min-font-size);
+	$u4: unit($max-font-size);
+
+	@if $u1 == $u2 and $u1 == $u3 and $u1 == $u4 {
+		& {
+			font-size: $min-font-size;
+			@media screen and (min-width: $min-vw) {
+				//$value: calc(#{$min-font-size} + #{strip-unit($max-font-size - $min-font-size)} * ((100vw - #{$min-vw});
+				font-size: calc(#{$min-font-size} + #{strip-unit($max-font-size - $min-font-size)} * ((100vw - #{$min-vw}) / #{strip-unit($max-vw - $min-vw)})) !important;
+				//font-size: math.div( $value, $value / #{strip-unit($max-vw - $min-vw)})) ) !important;
+			}
+			@media screen and (min-width: $max-vw) {
+				font-size: $max-font-size !important;
+			}
+		}
+	}
+}
+
+
+
+/*
+ * Embed custom fonts locally
+ * Usage
+ * @include font-face('gotham', '/fonts/gotham', 400);
+ */
+
+@mixin font-face($font-name, $file-name, $weight: normal, $style: normal) { 
+	@font-face {
+		font-family: quote($font-name);
+		src: url($file-name + '.eot');
+		src: local($font-name),
+			 url($file-name + '.eot?#iefix')  format('embedded-opentype'),
+			 url($file-name + '.woff') format('woff'),
+			 url($file-name + '.ttf')  format('truetype'),
+			 url($file-name + '.svg##{$font-name}')  format('svg');
+		font-weight: $weight;
+		font-style: $style;
+		font-display: swap;
+	}
+ }
+ 
+
+/* Define default font size
+p {
+	@include font-size(14px)
+}
+Output: 
+p {
+	font-size: 14px; //For unsupported browsers
+	font-size: 0.8rem;
+}
+*/
+@function calculateRem($size) {
+	$remSize: $size / 16px;
+	@return $remSize * 1rem;
+}
+
+@mixin font-size($size) {
+	font-size: $size;
+	font-size: calculateRem($size);
+}

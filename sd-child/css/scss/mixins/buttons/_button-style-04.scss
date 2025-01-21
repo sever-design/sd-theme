@@ -1,0 +1,117 @@
+/* BNT 4 
+
+Sliding to center top & bottom short lines + small text on a right side
+
+default:
+  free —————
+     BUTTON
+  —————
+
+hover:
+      ————
+     BUTTON
+      ————
+
+How to use @include create_button(...PARAMS...);
+
+btn structure needed
+<a><span></span></a>
+
+
+Config
+copy structure to _vars.scss btn style array;
+
+PARAMS:
+	"main-bg": $_bg_dark,
+	"border-color": #fff,
+	"txt-color": #fff,
+	"lines-color": $_color_accent, 
+	"font-family": $_font_button,
+	"sup_txt":	'free',
+*/
+
+
+@mixin create_button(
+		$_main_bg: map-get($button-styles, "main-bg"),
+		$_btn_txt_color: map-get($button-styles, "txt-color"),
+		$_btn_lines_color: map-get($button-styles, "lines-color"),
+		$_btn_font: map-get($button-styles, "font-family"),
+		$_btn_sup_txt: map-get($button-styles, "sup-txt"),
+	) {
+
+	@include d-inline-block;
+	text-transform: uppercase;
+	background: $_main_bg;
+	color: $_btn_txt_color;
+	font-family: $_btn_font;
+	font-weight: 700;
+	padding: 15px 25px;
+	transition: all .3s linear;
+	text-decoration: none;
+	border: 0;
+	@include fluid-type($_screen_min_width, $_screen_max_width, 18px, 20px);
+	position: relative;
+	text-decoration: none;
+
+	&:before,
+	&:after {
+		content: '';
+		position: absolute;
+		display: block;
+		opacity: 1;
+		z-index: 1;
+		width: 90px;
+		height: 2px;
+		background: $_btn_lines_color;
+		transition: all .2s cubic-bezier(0.175,0.885,0.320,1.275);
+		transform: translate3d(0,0,0);
+	}
+
+	&:before {
+		right: 0;
+		top: 0;
+		left: auto;
+	}
+
+	&:after {
+		left: 0;
+		bottom: 0;
+	}
+
+
+	span {
+
+		&:before {
+			content: $_btn_sup_txt;
+			font-size: 12px;
+			text-transform: uppercase;
+			color: $_btn_txt_color;
+			font-weight: 700;
+			line-height: 1;
+			position: absolute;
+			transition: all .3s;
+			opacity: 1;
+			top: 0;
+			left: 0;
+		}
+	}
+	
+
+	&:hover {
+		span {
+			&:before {
+				opacity: 0;						
+			}
+		}
+
+		&:before {
+			transform: translateX(50%);
+			right: 50%;
+		}
+
+		&:after {
+			transform: translateX(-50%);	
+			left: 50%;
+		}
+	}
+}

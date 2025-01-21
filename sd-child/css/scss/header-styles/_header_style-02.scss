@@ -1,0 +1,39 @@
+/* STYLE 01
+ * header structure style 01
+ * inlcusion for: _header.scss str: 42
+ * & = #masthead.layout-styles__s01 
+ */
+
+$_header_bg_color: #fff;
+$_header_bg_color_2: transparent;
+
+& {
+    padding-top: 45px;
+    background: transparent;
+    transition: background .3s linear, padding-top .3s linear;
+    //@include background-gradient($_header_bg_color, $_header_bg_color_2, 'vertical');
+
+    @include is_scrolled {
+        padding-top: 0;
+        background: #fff;
+    }
+
+	.main-header__nav-wrapper {
+        @extend .max-width;
+        @include flexme($hor_align: stretch, $space_align: flex-start, $wrap: nowrap);
+
+        .menu {
+            padding: 20px;
+        }
+
+        .main-header__logo {
+            max-width: 250px;
+            padding: 15px;
+            margin-left: 5%;
+
+            img {
+                width: 100%;
+            }
+        }
+	}
+}

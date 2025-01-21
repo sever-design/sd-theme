@@ -1,0 +1,178 @@
+@mixin max-width($_max_width) {
+	max-width: $_max_width;
+	width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* Inline Block Mixin */
+@mixin d-inline-block($valign: middle) {
+	display: inline-block;
+	@if $valign == middle {
+		vertical-align: middle
+	} @else {
+		vertical-align: $valign;
+	}
+}
+
+@mixin border-radius($radius) {
+	-webkit-border-radius: $radius;
+	-moz-border-radius: $radius;
+	-ms-border-radius: $radius;
+	-o-border-radius: $radius;
+	border-radius: $radius;
+}
+
+
+
+/* Transition steps */
+@mixin step-transition {
+	@for $i from 1 through 50 {
+		&:nth-child(#{$i}) {
+			transition: transform 1s #{$i * .08}s cubic-bezier(.29,1.4,.44,.96);
+		}
+	}
+}
+
+//add corner to bottom
+@mixin cornered-img($cornerbg, $cornerX, $cornerY, $cornerW) {
+    position: relative;
+    //display: inline-block; /* Ensure the container adapts to the size of the image */
+
+	&:after {
+	    content: '';
+	    position: absolute;
+
+	    @if $cornerY == 'top' {
+	    	top: 0;
+	    }
+	    @if $cornerY == 'bottom' {
+	    	bottom: 0;
+	    }
+
+	    border-style: solid;
+	    @if $cornerX == 'right' {
+	    	right: 0;
+	    }
+
+	    @if $cornerX == 'left' {
+	    	left: 0;
+	    }
+	    width: 0;
+	    height: 0;
+
+        // Handle border styles and color for each corner
+        @if $cornerX == 'left' and $cornerY == 'top' {
+            border-width: $cornerW $cornerW 0 0;
+            border-color: $cornerbg transparent transparent transparent;
+        }
+        @if $cornerX == 'left' and $cornerY == 'bottom' {
+            border-width: $cornerW 0 0 $cornerW;
+            border-color: transparent transparent transparent $cornerbg;
+        }
+        @if $cornerX == 'right' and $cornerY == 'top' {
+            border-width: 0 $cornerW $cornerW 0;
+            border-color: transparent $cornerbg transparent transparent;
+        }
+        @if $cornerX == 'right' and $cornerY == 'bottom' {
+            border-width: 0 0 $cornerW $cornerW;
+            border-color: transparent transparent $cornerbg transparent;
+        }
+
+      // Media query adjustments for smaller screens
+        @include screen(custom, max, 600) {
+            @if $cornerX == 'left' and $cornerY == 'top' {
+                border-width: $cornerW $cornerW 0 0;
+            }
+            @if $cornerX == 'left' and $cornerY == 'bottom' {
+                border-width: $cornerW 0 0 $cornerW;
+            }
+            @if $cornerX == 'right' and $cornerY == 'top' {
+                border-width: 0 $cornerW $cornerW 0;
+            }
+            @if $cornerX == 'right' and $cornerY == 'bottom' {
+                border-width: 0 0 $cornerW $cornerW;
+            }
+        }
+	}
+}
+
+/* Usage
+figure {
+	@include cornered-img(#ccc,right,bottom, 50px);
+}
+*/
+
+
+/* Helpful checkers */
+/*
+usage: 
+
+@include is_admin_bar {
+	color: #222;
+}
+*/
+
+@mixin is_body_class($class_name) {
+
+	//@debug "body class: body.#{$class_name}";
+
+	body.#{$class_name} & {
+		@content;
+	}
+}
+
+
+@mixin is_mobile {
+	html.mobile & {
+		@content;
+	}
+}
+
+@mixin is_page_id($pid) {
+	body.page-id-#{$pid} & {
+		@content;
+	}
+}
+
+
+@mixin fit-children($amount) {
+	@if $amount == 1 {
+        /* one item */
+        &:first-child:nth-last-child(1) {
+        /* -or- li:only-child { */
+            width: 100%;
+        }
+	} @else {
+        &:first-child:nth-last-child(2),
+        &:first-child:nth-last-child(2) ~ & {
+        	width: calc(100 / #{$amount});
+        }
+	}
+}
+
+
+
+// END Mixins
+
+
+// Flex
+@import "mixins/_mixin_flex";
+
+// Fonts
+@import "mixins/_mixin_font";
+
+// Positioning
+@import "mixins/_mixin_position";
+
+// Background Colors & Gradients
+@import "mixins/_mixin_background-colors";
+
+// Background Colors & Gradients
+@import "mixins/_mixin_media-queries";
+
+// Hover Effects
+@import "mixins/_mixin_hover-effects";
+
+// Buttons
+@import "mixins/_mixin_buttons";

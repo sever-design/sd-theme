@@ -1,0 +1,124 @@
+@import "_includes", "_page-top-image";
+
+#primary {
+	position: relative;
+	@include max-width(1980px);
+
+	&:after {
+		content: '';
+		display: block;
+		position: absolute;
+		z-index: 2;
+		width: 100%;
+		height: 178px;
+		background: url($_img_path + 'wave-beige.svg') no-repeat center;
+		background-size: cover;
+		bottom: -110px;
+		left: 0;
+	}
+
+		& > .container-fluid {
+			padding-top: 65px;
+			padding-bottom: 85px;
+		}
+}
+
+
+article {
+	margin-bottom: 35px;
+
+	.entry-meta {
+		display: none;
+	}
+
+	.entry-header {
+
+		.feat-image-link {
+			margin-bottom: 15px;
+			display: block;
+		}
+	}
+
+	.entry-title {
+		@extend .title;
+
+		a {
+			color: $_color_accent;
+			@include fluid-type($_screen_min_width, $_screen_max_width, 16px, 28px);
+
+			&:hover {
+				color: $_color_txt;
+			}
+		}
+	}
+
+	//articles not from blog cat - from PF
+	& {
+		@include flexme;
+
+		@include screen(custom, max, 991) {
+			display: block;
+		}
+	
+		&:nth-child(odd) {
+	
+			@include flexme($direction: row-reverse);
+
+			@include screen(custom, max, 991) {
+				display: block;
+			}
+	
+		}
+	
+
+		.entry-header {
+			width: 45%;
+
+			@include screen(custom, max, 991) {
+				width: 100%;
+			}
+
+			.feat-image-link {
+				display: block;
+				overflow: hidden;
+				@include border-radius($_theme_border_radius);
+				box-shadow: 0 0 8px 0 rgba(0,0,0,.15);
+
+				@include screen(custom, max, 991) {
+					width: 100%;
+				}
+
+				img {
+					position: relative;
+					transition: transform .3s;
+				}
+
+				&:hover {
+					img {
+						transform: scale(1.1) rotate(-3deg);
+					}
+				}
+			}
+
+
+		}
+
+		.entry-content {
+			flex: 1;
+			padding: 5% 3%;
+
+			h3 {
+				@extend .title;
+				@include fluid-type($_screen_min_width, $_screen_max_width, 24px, 40px);
+
+				a {
+					color: $_color_accent;
+
+					&:hover {
+						color: $_color_txt;
+					}
+				}
+			}
+		}
+	}
+}

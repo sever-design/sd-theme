@@ -1,0 +1,83 @@
+.site__footer {
+	background: $_bg_light_2;
+	position: relative;
+	border-bottom: 2px solid $_bg_light_3;
+
+	&:before,
+	&:after {
+		content: '';
+		position: absolute;
+		top: 0;
+		display: block;
+		width: 50%;
+		height: 6px;
+	}
+
+	&:before {
+		left: 0;
+		background: $_color_accent;
+	}
+
+	&:after {
+		left: 50%;
+		background: $_bg_dark;
+	}
+
+	#footercontainer {
+		padding: 45px 10px 0;
+		text-align: center;
+	}
+
+	.footer__contacts {
+		margin: 35px 0 15px;
+		padding: 15px 0;
+
+
+		@include flexme($space_align: center);
+
+		> span {
+			display: block;
+			padding: 10px 20px;
+			margin: 5px 5px;
+
+
+			._prefix {
+				color: $_bg_dark;
+			}
+
+			a {
+				font-weight: 500;
+				color: $_color_txt;
+				@include fluid-type($_screen_min_width, $_screen_max_width, 16px, 22px);
+
+				i {
+					margin-right: 8px;
+					color: $_color_accent;
+				}
+
+			}
+
+			&:hover {
+				background: $_color_accent;
+
+				a {
+					color: $_bg_light;
+				}
+
+				i {
+					color: $_bg_light;
+				}
+			}
+		}
+	}
+}
+
+#copy {
+	text-align: center;
+	font-weight: 700;
+
+	p {
+		margin: 0;
+		padding: 15px;
+	}
+}

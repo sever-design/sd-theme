@@ -1,0 +1,117 @@
+/* BTN 1
+
+Sliding borders around the perimeter of the btn
+
+default:
+  
+	|  BUTTON  |
+
+hover:
+ ——————————
+|  BUTTON  |
+ ——————————
+ 
+how to use
+@include create_button();
+
+btn structure needed
+<a><span></span></a>
+
+
+Config
+copy to _vars.scss
+
+PARAMS:
+	"main-bg": $_bg_dark,
+	"border-color": #fff,
+	"txt-color": #fff,
+	"lines-color": $_color_accent,
+	"font-family": $_font_button,
+	"sup_txt":	'free',
+
+
+*/
+
+@mixin create_button(
+		$_main_bg: map-get($button-styles, "main-bg"),
+		$_btn_txt_color: map-get($button-styles, "txt-color"),
+		$_btn_lines_color: map-get($button-styles, "lines-color"),
+		$_btn_font: map-get($button-styles, "font-family"),
+		$_btn_sup_txt: map-get($button-styles, "sup-txt"),
+	) {
+	@include d-inline-block;
+	background: $_main_bg;
+	border: 0;
+	padding: 10px 25px;
+	min-width: 180px;
+	text-transform: uppercase;
+	font-family: $_font_button;
+	position: relative;
+	text-align: center;
+	color: $_btn_txt_color;
+	@include fluid-type($_screen_min_width, $_screen_max_width, 17px, 20px);
+
+	&:before,
+	&:after,
+	span:before,
+	span:after {
+		content: '';
+		background: $_btn_lines_color;
+	    position: absolute;
+	}
+
+	&:before {
+	    top: 0;
+	    left: 0;
+	}
+
+	&:after {
+	    top: 0;
+	    right: 0;
+	}
+
+	&:before,
+	&:after {
+		display: block;
+		width: 1px;
+		height: 100%;
+		transform: scaleY(.3);
+		transform-origin: center;
+	    transition: transform .45s cubic-bezier(.3,.1,.3,1) .45s;
+	}
+
+	span:before,
+	span:after {
+		width: 100%;
+		height: 1px;
+		transform: scaleX(0);
+		transition: transform .45s cubic-bezier(.3,.1,.3,1) 0s;
+	}
+
+	span:before {
+		top: 0;
+		left: 0;
+		transform-origin: left center;
+	}
+
+	span:after {
+		bottom: 0;
+		right: 0;
+		transform-origin: right center;
+	}
+
+	&:hover {
+
+		&:before,
+		&:after {
+			transform: none;
+			transition-delay: 0s;
+		}
+
+		span:before,
+		span:after {
+			transition-delay: .45s;
+			transform: scaleX(1);
+		}
+	}
+}

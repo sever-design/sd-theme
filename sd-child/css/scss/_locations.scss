@@ -1,0 +1,545 @@
+
+$_pin_size: 21px;
+
+$min_width: 320px;
+$max_width: 1980px;
+$_map_toggle_size: 1010;
+
+/****************/
+
+@-webkit-keyframes clouds {
+    0% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0)
+    }
+
+    to {
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%)
+    }
+}
+
+@keyframes clouds {
+    0% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0)
+    }
+
+    to {
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%)
+    }
+}
+
+
+@-webkit-keyframes pulse {
+    0% {
+        -webkit-transform: scale(1,1);
+        transform: scale(1,1);
+        transform-origin: center bottom;
+    }
+
+    50% {
+        -webkit-transform: scale(1.5,1.5);
+        transform: scale(1.5,1.5);
+        transform-origin: center bottom;
+    }
+
+    100% {
+        -webkit-transform: scale(1,1);
+        transform: scale(1,1);
+        transform-origin: center bottom;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        -webkit-transform: scale(1,1);
+        transform: scale(1,1);
+        transform-origin: center bottom;
+    }
+
+    50% {
+        -webkit-transform: scale(1.5,1.5);
+        transform: scale(1.5,1.5);
+        transform-origin: center bottom;
+    }
+
+    100% {
+        -webkit-transform: scale(1,1);
+        transform: scale(1,1);
+        transform-origin: center bottom;
+    }
+}
+
+
+
+
+/****************/
+
+address {
+	font-style: normal;
+}
+
+
+#locations {
+	background: #000;
+	position: relative;
+	font-size: 16px;
+	padding: 0;
+
+	.bg {
+		background: #000 url($_img_path + 'stars.jpg');
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 150%;
+		height: 150%;
+		background-size: contain;
+		//transition: all .3s;
+
+	}
+}
+
+p.tooltip {
+	background: #333;
+	color: #fff;
+	z-index: 20;
+	position: absolute;
+	display: block;
+	margin: 0;
+	padding: 5px 10px;
+	font-size: 14px;
+}
+
+
+
+/* tabs */
+#location {
+	position: relative;
+	z-index: 2;
+	visibility: hidden;
+
+	.__location-name {
+		padding: 10px 15px;
+		@include d-inline-block;
+		text-align: center;
+		color: #fff;
+		background: #ccc;
+		cursor: pointer;
+		text-transform: uppercase;
+
+		&.active {
+			background: #000;
+		}
+	}
+}
+
+
+#locations {
+	position: relative;
+	overflow: hidden;
+
+	#map-location-details {
+		position: absolute;
+		top: 10%;
+		right: 0;
+		width: 53%;
+		padding-top: 65px;
+		@include d-flex;
+		@include flex-direction(row);
+		@include flex-wrap(wrap);
+		@include align-content(center);
+		@include flex-justify(flex-end);
+		@include flex-align(flex-end);
+
+		@include screen(custom, max, $_map_toggle_size) {
+			width: 100%;
+			position: relative;
+			top: 0;
+			margin-top: -65px;
+		}
+		
+
+		.location-detail {
+			width: 100%;
+			height: 100%;
+			padding: 6%;
+			background: #1b1b1b;
+			color: #fff;
+
+			.location-details-inner {
+				width: 100%;
+				@include d-flex;
+				@include flex-direction(row);
+				@include flex-wrap(wrap);
+				@include align-content(center);
+				@include flex-justify(center);
+				@include flex-align(stretch);
+
+				/*
+				@include screen(custom, max, 600) {
+					@include flex-direction(column-reverse);
+				}
+				*/
+
+				#location-services {
+					position: relative;
+					overflow: hidden;
+
+					& > aside {
+						
+						transition: all .3s;
+
+						.widget-title {
+							display: none;
+							visibility: hidden;
+						}
+
+						ul {
+
+							li {
+								@include d-inline-block;
+
+								&:not(:last-child):after {
+									content: ' / ';
+									color: #fff;
+								}
+
+								a {
+									color: #fff;
+
+									&:hover {
+										text-decoration: underline;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				.location-detail-data {
+					flex: 1;
+					@include d-flex;
+					@include flex-direction(column);
+
+					@include screen(custom, max, 600) {
+						width: 100%;
+					}
+				}
+
+				.location-detail-image {
+					width: 45%;
+					margin-top: -130px;
+					position: relative;
+
+					@include screen(custom, max, 600) {
+						width: 35%;
+						align-self: flex-end;
+						top: -80px;
+					}
+
+					.location-detail-image-mask {
+						width: 100%;
+						height: 100%;
+						padding-top: 145%;
+						background: #111;
+
+						.__image {
+							position: absolute;
+							top: 0;
+							left: 0;
+							width: 100%;
+							height: 100%;
+							transform: matrix(1, 0, 0, 1, 0, 0);
+							margin: 0;
+
+							img {
+								position: absolute;
+								top: 0;
+								left: 0;
+								object-fit: cover;
+								display: block;
+								transform: matrix(1, 0, 0, 1, 0, 0);
+							}
+						}
+
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+#map-world {
+	position: relative;
+	width: 70%;
+	overflow: hidden;
+	margin-left: -10px;
+	perspective: 800px;
+	transition: all .3s;
+
+	@include screen(custom, max, $_map_toggle_size) {
+		width: 96%;
+	}
+
+	&.moveable {
+		will-change: transform;
+		transform: translate3d(0, 0, 0)
+		
+	}
+
+	.map-world-clouds {
+		display: block;
+		-webkit-mask-image: url($_img_path + 'globe-mask.png');
+		mask-image: url($_img_path + 'globe-mask.png');
+		-webkit-mask-size: cover;
+		mask-size: cover;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+		pointer-events: none;
+		z-index: 3;
+
+		img {
+			position: absolute;
+			display: block;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 200%;
+			max-width: 200%;
+			opacity: .25;
+			-webkit-animation: clouds 175s linear infinite;
+			animation: clouds 175s linear infinite;
+		}
+	}
+
+	.map-world-inner {
+		position: relative;
+		padding-top: 85%;
+	}
+
+	.__map-world-slide {
+		overflow: hidden;
+		position: absolute;
+		width: 100%;
+		opacity: 0;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		&.active {
+			opacity: 1;
+		}
+
+
+
+		&[data-locationid] {
+			background-repeat: no-repeat;
+			background-position: center center;
+			background-size: contain;
+			
+		}
+
+		&[data-locationid*="canada"] {
+			background-image: url('../images/globe-canada.jpg');
+		}
+
+		&[data-locationid*="usa"] {
+			background-image: url('../images/globe-usa.jpg');
+		}
+
+		&[data-locationid*="australia"] {
+			background-image: url('../images/globe-australia.jpg');
+		}
+
+	}
+}
+
+.location-pins {
+	position: relative;
+	height: 100%;
+	width: 100%;
+
+	.__map-marker {
+		display: block;
+		width: $_pin_size;
+		height: $_pin_size;
+		position: absolute;
+		transition: transform .3s;
+		//will-change: transform;
+		cursor: pointer;
+		z-index: 100;
+		background: url('../images/address-pin.svg') no-repeat center center;
+		background-size: contain;
+		animation: pulse 2s linear infinite;
+
+		&.active,
+		&:hover {
+			transform: scale(1.5,1.5);
+			animation: none;
+			background: url('../images/address-pin-active.svg') no-repeat center center;
+		}
+
+		&[data-locationid*="toronto"] {
+			&.day {
+				left: 48.3738%;
+				top: 46.7704%;
+			}
+
+			&.night {
+				left: 50.3626%;
+				top: 65.8804%;
+			}
+		}
+
+		&[data-locationid*="montreal"] {
+			&.day {
+				left: 55.4087%;
+				top: 40.7133%;
+			}
+
+			&.night {
+				left: 55.3025%;
+				top: 61.812%;
+			}
+		}
+
+		&[data-locationid*="calgary"] {
+			&.day {
+				left: 19.171%;
+				top: 33.9073%;
+			}
+
+			&.night {
+			left: 24.4487%;
+			top: 53.1%;
+			}
+		}
+
+		&[data-locationid*="newyork"] {
+			&.day {
+				left: 54.4715%;
+				top: 49.7963%;
+			}
+
+			&.night {
+				left: 56.3535%;
+				top: 68.3826%;
+			}
+		}
+
+		&[data-locationid*="losangeles"] {
+			&.day {
+				left: 9.09989%;
+				top: 57.5572%;
+			}
+
+			&.night {
+				left: 15.6026%;
+				top: 74.7203%;
+			}
+		}
+
+		&[data-locationid*="chicago"] {
+			&.day {
+				left: 40.4768%;
+				top: 49.1035%;
+			}
+
+			&.night {
+				left: 43.9831%;
+				top: 68.6005%;
+			}
+		}
+
+		/*
+		&[data-locationid*="brisbane"] {
+			&.day {
+				left: 51.7322%;
+				top: 60.6409%;
+			}
+		}
+		*/
+	}
+}
+
+#map-location-details {
+
+	.location-detail-data {
+		padding: 35px 25px;
+
+		@include screen(custom, max, $_map_toggle_size) {
+			padding: 35px 15px;
+		}
+
+		h3 {
+			@include fluid-type($min_width, $max_width, 16px, 26px);
+			margin-bottom: 25px;
+			text-transform: uppercase;
+
+			.loc-wrapper {
+				display: block;
+				overflow: hidden;
+				@include fluid-type($min_width, $max_width, 24px, 36px);
+				margin:10px 0; 
+			}
+		}
+
+		#location-name {
+			text-transform: capitalize;
+			display: inline-block;
+			transition: all .3s;
+			
+			&:before {
+				content: '\f041';
+				font-family: 'FontAwesome';
+				margin-right: 10px;
+				color: rgba(255,255,255,.7);
+			}
+		}
+
+
+		address {
+			padding: 15px 0;
+			margin: 15px 0;
+			border-top: 1px solid #666;
+			flex: 1;
+		}
+
+		p {
+			overflow: hidden;
+			display: block;
+		}
+
+		.location-phone {
+			color: #fff;
+			text-decoration: none;
+		}
+
+		#location-details {
+			position: relative;
+			display: block;
+			transition: all .46s;
+			@include fluid-type($min_width, $max_width, 20px, 30px);
+
+			&:before {
+				content: '\f095';
+				font-family: 'FontAwesome';
+				margin-right: 8px;
+				color: rgba(255,255,255,.7);
+			}
+		}
+
+		
+	}
+
+}
+

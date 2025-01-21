@@ -1,0 +1,110 @@
+/* Mobile Menu Toggler
+ * STYLE 02
+ */
+
+$_mt_color: 				#ccc;
+$_mt_bg:					#000;
+$_mt_bg_active:				#005c9c;
+$_mt_width:					30px;
+$_mt_height:				30px;
+$_mt_transition_duration: 	.1s;
+$_mt_transition_delay: 		.35s;
+
+& {
+	/*
+	 * Style for main button layout 
+	 * button#mobile-menu-toggler
+	 */
+	
+	position: relative;
+	margin: 0;
+	cursor: pointer;
+	padding: 0;
+	border: 0;
+	height: $_mt_height;
+	width: $_mt_width;
+	background: transparent;
+
+	
+	&.mt-style {
+		/*
+		 * Default button style
+		 */
+		span {
+			background-color: $_mt_bg;
+			border-radius: 1px;
+			height: 2px;
+			width: 100%;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			margin: -1px 0 0 -15px;
+			transition: height $_mt_transition_duration;
+			
+			&:before,
+			&:after {
+				content: '';
+				background-color: $_mt_bg;
+				border-radius: 1px;
+				height: 2px;
+				width: 100%;
+				position: absolute;
+				left: 50%;
+				margin-left: -15px;
+				transition: all 200ms;
+			}
+
+			
+
+			&:before {
+				bottom: -7px;
+			}
+
+			&:after {
+				top: -7px;
+			}
+		}
+
+		/*
+		 * Active Toggled-On Style
+		 */
+	 	&.toggled-on {
+
+	 		& > span  {
+				height: 0;
+
+				&:before,
+				&:after {
+					background: $_mt_bg_active;
+					top: 1px;
+				}
+
+				&:before {
+					transform: rotate(-45deg);
+				}
+
+				&:after {
+					transform: rotate(45deg);
+				}
+
+			}
+	 	}
+
+		/*
+		 * Hovered Style
+		 */
+	 	&:hover {
+
+	 		& > span  {
+				
+				&,
+				&:before,
+				&:after {
+					background: $_mt_bg_active;
+				}
+
+			}
+	 	}
+
+	}
+}

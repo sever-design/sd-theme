@@ -1,0 +1,81 @@
+@use "sass:map";
+/* ------------ Theme VARS ------------ */
+
+/*
+ * Theme Fonts
+ */
+
+$_font_base_narrow: 'Poppins';
+$_font_base: 'Poppins';
+$_font_heading: 'PT Sans';
+$_font_button: 'Poppins';
+
+$_line_height_reduced: 1.2;
+$_line_height_norm: 1.5;
+$_line_height_enlarged: 2;
+
+/*
+ * Theme Colors
+	TIPS:  darken / lighten in %
+	$primary-color: darken($primary-color, 60%);
+	$accent-color: lighten($accent-color, 60%);
+
+	@use "sass:map";
+
+	$theme-colors: (
+	  "success": #28a745,
+	  "info": #17a2b8,
+	  "warning": #ffc107,
+	);
+
+	.alert {
+	  // Instead of $theme-color-#{warning}
+	  background-color: map.get($theme-colors, "warning");
+	}
+ */
+$_color_txt:            #414142;
+$_color_txt_light:      #3C3C3D;
+$_bg_light:             #FEFEFE;
+$_bg_light_2:           #F7F7F7;
+$_bg_light_3:			#C1C1C9;
+$_bg_dark:              #9cbc79;
+$_color_accent:         #0ea0c1;
+
+
+$heading-colors: (
+	"main-text": $_color_accent,
+	"sub-text": #1b1b1b,
+);
+
+/* Copy btn config from corresponding btn style file
+ */
+// btn style 2
+$button-styles: (
+	"main-bg": 'transparent',
+	"main-hover-bg": #fff,
+	"border-color": #fff,
+	"txt-color": #fff,
+	"hover-txt-color": $_color_txt,
+	"font-family": $_font_button,
+);
+
+
+/*
+ * Theme Images Path
+ */
+
+$_img_path: '../images/';
+
+/*
+ * Theme Min & Max Screen Width
+ */
+
+$_screen_min_width: 320px;
+$_screen_max_width: 1980px;
+
+/*
+ * Theme Mobile Menu Toggler. Enable at Resolution
+ */
+$_mobile_menu_toggle_screen_size: 1120;
+$_theme_border_radius: 6px;
+$_theme_max_content_width: 1680px;

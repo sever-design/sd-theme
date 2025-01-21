@@ -1,0 +1,221 @@
+/*
+ * Common classes for main elements & servicing styles
+ */
+html {
+    //scroll-behavior: smooth;
+}
+body {
+	color: $_color_txt;
+	position: relative;
+	min-width: 320px;
+	background: $_bg_light;
+	@extend .customize-scrollbar;// From _scrollbar.scss
+
+	p.tooltip {
+		position: absolute;
+		display: block;
+		padding: 2px 5px;
+		background: $_color_txt;
+		color: #fff;
+		font-family: $_font_heading;
+		@include fluid-type($_screen_min_width, $_screen_max_width, 16px, 20px);
+		z-index: 100;
+		font-weight: 300;
+		transform: translateX(-50%);
+		transition: all .3s;
+	}
+}
+
+.yt-video-wrapper {
+	padding-top: 56.25%;
+	position: relative;
+
+	&.vert-video-ratio {
+		padding-top: 177.77%;
+	}
+
+	a.play {
+		z-index: 100;
+		@include flexme($space_align: center);
+		text-decoration: none !important;
+		font-size: 66px;
+		color: transparent;
+
+		i {
+			color: #FF0000;
+		}
+		
+		&.hidden {
+			display: none !important;
+		}
+	}
+
+	a.play,
+	iframe {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+}
+	
+//NEW Twitter X Icon Fix
+.fa.fa-twitter{
+	font-family:sans-serif;
+}
+.fa.fa-twitter::before{
+	content:"𝕏";
+	font-size:1.2em;
+}
+
+
+.widget-title,
+.wp-block-heading,
+.title {
+	font-family: $_font_heading;
+	font-weight: 900;
+	line-height: 1.1;
+	color: $_color_txt;
+
+	em, span {
+		font-style: normal;
+		font-weight: inherit;
+		color: $_color_accent
+	}
+}
+
+.buttonme {
+
+	input[type="submit"],
+	button,
+	a {
+		@include d-inline-block;
+		text-align: center;
+		padding: 15px 20px;
+		//background: $_color_accent;
+		@include background-gradient($_color_accent, $_bg_dark, 'horizontal');
+		@include border-radius($_theme_border_radius);
+		color: $_bg_light;
+		text-transform: uppercase;
+		letter-spacing: 1.5px;
+		@include fluid-type($_screen_min_width, $_screen_max_width, 13px, 14px);
+		font-family: $_font_button;
+		border: 0;
+		font-weight: 600;
+		transition: background .3s;
+
+		&:hover {
+			background: $_color_accent;
+		}
+	}
+
+	&.dark {
+		a {
+			background: $_bg_dark;
+			@include border-radius($_theme_border_radius);
+
+			&:hover {
+				background: $_color_accent;
+			}
+		}
+	}
+
+	&.white {
+		a {
+			background: $_bg_light;
+			color: $_bg_dark;
+
+			&:hover {
+				background: none;
+				outline: 1px solid $_bg_light;
+			}
+		}
+	}
+
+	&.hover-to-white {
+		a {
+			&:hover {
+				background: $_bg_light;
+				color: $_color_txt;
+			}
+		}
+	}
+}
+
+.linkme {
+	a {
+		@include d-inline-block;
+		position: relative;
+		padding: 2px 28px 2px 0;
+		color: $_color_accent;
+		font-size: 12px;
+		text-transform: uppercase;
+
+
+		&:after {
+			content:'';
+			display: block;
+			position: absolute;
+			right: 5px;
+			top: 50%;
+			transform: translateY(-50%);
+			background: url($_img_path + 'arr.svg') no-repeat right center;
+			width: 16px;
+			height: 8px;
+			transition: right .3s;
+		}
+
+		&:hover {
+			&:after {
+				right: 0;
+			}
+		}
+	}
+}
+
+@mixin fire-effect {
+    position: relative;
+
+    &:before,
+    &:after {
+        content: attr(data-cont);
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+        opacity: 0;
+    }
+
+    &:before {
+        color: #FF0000;
+    }
+
+    &:after {
+        color: #FFBF00;
+    }
+
+    &:hover {
+        &:before,
+        &:after {
+            opacity: 1;
+        }
+
+        &:before {
+            -webkit-animation: fire 3s infinite;
+            -moz-animation: fire 3s infinite;
+            -ms-animation: fire 3s infinite;
+            animation: fire 3s infinite;
+        }
+
+        &:after {
+            -webkit-animation: fire2 1.5s infinite;
+            -moz-animation: fire2 1.5s infinite;
+            -ms-animation: fire2 1.5s infinite;
+            animation: fire2 1.5s infinite;
+        }
+    }
+}

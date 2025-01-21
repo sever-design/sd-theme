@@ -1,0 +1,174 @@
+/*
+ * Desktop Menu Style Mobile
+ * STYLE 02
+ *
+ * 01. Structure
+ * 02. Styles
+ *
+ * id="#site-navigation"
+ * & = .menu__main-navigation 
+ */
+
+
+/*
+ * local VARs
+ */
+
+$_iconic_font_family:   'FontAwesome';      // use here any iconic font and ita value for $_dsk_dropdown_icon
+$_dropdown_icon:    '\f0d7';            //fa-caret-down [&#xf0d7;]
+$_mobmenu_width:    320px;
+
+
+& {
+    position: fixed;
+    width: 100%;
+    max-width: $_mobmenu_width;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    z-index: 10250;
+    transform: translate($_mobmenu_width, 0);
+    -ms-transform: translatex(-$_mobmenu_width); // IE fix
+    transition: width 475ms ease-out, transform 450ms ease, border-radius .8s .1s ease;
+    border-bottom-left-radius: $_mobmenu_width;
+    display: block;
+    background: #ccc; //tmp
+
+    &.menu-opened {
+        transform: translatex(0);
+        border-bottom-left-radius: 0;
+
+        .nav-menu > li {
+            transform: translateX(0);
+            @include transition;
+        }
+    }
+
+    .menu-main-menu-container {
+        height: 100%;
+    }
+
+    /*
+     * 01. Structure & Behavior
+     */
+
+    menu {
+
+        &.nav-menu {
+            height: 100%;
+            overflow: auto;
+            overflow-x: hidden;
+            position: relative;
+
+            // common props for nav elems
+            li {
+                display: block;
+
+                &[class*="children"] {
+                    @include flexme;
+
+                    & > a {
+                        flex: 1;
+                    }
+
+                    & > .sub-menu-toggler {
+
+                        &:after {
+                            content: $_dropdown_icon;
+                            font-family: $_iconic_font_family;
+                        }
+                    }
+
+                    .sub-menu {
+                        display: none;
+                        width: 100%;
+
+                        &.opened {
+                            display: block;
+                        }
+                    }
+                }
+            }
+            // end common props for elems
+
+            & > li {
+                // 1st level menu - root items
+                transform: translateX($_mobmenu_width);
+                -ms-transform: translatex(-$_mobmenu_width); // IE fix
+
+            }// 1st lvl end
+        } // .nav-menu end
+    }
+
+
+    /*
+     * 02. Styles Colors, Background, Fonts & Sizes
+     */
+   menu {
+
+        &.nav-menu {
+            text-align: left;
+
+            // common props for elems
+
+            // end common props for elems
+
+            & > li {
+                // 1st level menu - root items
+
+                & > a {
+                    
+                }
+
+                &[class*="children"] {
+
+                    & > a {
+                        
+                    }
+
+                    & > .sub-menu-toggler {
+                        
+                        &:after {
+
+                        }
+                    }
+
+                    & > .sub-menu {
+                        // 2nd level menu - sub-menu items
+
+                        & > li {
+
+                            & > a {
+
+                            }
+
+                            &[class*="children"] {
+
+                                & > a {
+                                }
+
+                                & > .sub-menu-toggler {
+
+                                    &:after {
+
+                                    }
+                                }
+
+                                & > .sub-menu {
+                                    // 3rd level menu - sub-sub-menu items
+
+                                    & > li {
+
+                                        & > a {
+
+                                        }
+                                    }
+                                } // 3rd lvl sub-menu end
+                            } // 3rd li.children end
+                        } // li 2nd lvl end
+                    } // 2nd sub-menu end
+                }// 1st .children end
+            }// 1st lvl end
+        } // .nav-menu end
+    }
+}

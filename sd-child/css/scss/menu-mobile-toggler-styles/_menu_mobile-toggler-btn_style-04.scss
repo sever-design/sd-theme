@@ -1,0 +1,99 @@
+
+/* button structure needed
+ * <button><span><span></span></span>MENU</button>
+ */
+
+& {
+	//position: fixed;
+	margin: 0 !important;
+	border: 0;
+	//display: block;
+	width: 70px;
+	height: 65px;
+	padding: 11px 12px;
+	background: none;
+	cursor: pointer;
+	font-family: $_font_base;
+	font-size: 15px !important;
+	line-height: 1;
+	text-transform: uppercase;
+	text-align: center;
+	z-index: 10255;
+	//transition: all .3s;
+	position: relative;
+	outline: none;
+	background: $_color_accent;
+
+	span {
+		display: block;
+		height: 20px;
+	}
+
+	& > span {
+		position: relative;
+		margin-bottom: 8px;
+
+		&:before,
+		&:after {content: '';}
+
+		& > span,
+		&:before,
+		&:after {
+			display: block;
+			width: 100%;
+			background: $_bg_light;
+			width: 100%;
+			height: 2px;
+			left: 0;
+			position: absolute;
+			width: 100%;
+			transition: all .3s;
+
+			
+		}
+
+		& > span { top: calc(50% - 1px); width: calc(100% - 10px); }
+		&:before {top: 0;}
+		&:after { bottom: 0; }
+	}
+
+	&:hover {
+		& > span {
+			& > span {
+				left: 5px;
+			}
+		}
+	}
+
+	&.toggled-on {
+		background: $_bg_light !important;
+		position: fixed;
+		top: 15px;
+		right: 15px;
+		z-index: 10300;
+
+
+		& > span {
+
+			& > span {
+				width: 0;
+				left: 50%;
+			}
+
+			&:before,
+			&:after {
+				top: 50%;
+				bottom: 50%;
+				transform-origin: center;
+				background: $_color_accent;
+
+				@include is_body_class(mob-menu-opened) {
+					background: $_color_accent;
+				}
+			}
+
+			&:before { transform: rotate(35deg);  }
+			&:after { transform: rotate(-35deg);  }
+		}
+	}
+}

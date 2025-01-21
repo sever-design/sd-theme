@@ -1,0 +1,281 @@
+article {
+	a {
+		text-decoration: underline;
+		/*color: $_color_txt; */
+		color: #999;
+
+		&:hover {
+			text-decoration: none;
+			color: $_color_txt;
+		}
+	}
+	h2 a, h3 a,	h4 a {
+		text-decoration: none;
+	}
+
+	.wp-block-image {
+		margin: 0;
+
+		a {
+			img {
+				transition: all 0.5s;
+			}
+
+			&:hover {
+				img {
+					transform: scale(1.15);
+				}
+			}
+		}
+	}
+	
+	.wp-block-column:hover .wp-block-image a img {
+		transform: scale(1.15);
+	}
+
+	.entry-content {
+
+		div.wp-block-media-text,
+		.su-row:not(.no-reverse) {
+			@include d-flex;
+			@include flex-direction(row);
+			@include flex-wrap(wrap);
+			@include align-content(center);
+			@include flex-justify(center);
+			@include flex-align(flex-start);
+			margin-bottom: 20px;
+
+			@include screen(custom, max, 991) {
+				@include flex-direction(column-reverse);
+				margin-bottom: 45px;
+			}
+			/*
+			&:nth-child(odd) {
+				@include flex-direction(row-reverse);
+
+				@include screen(custom, max, 991) {
+					@include flex-direction(column-reverse);
+				}
+			}
+			*/
+
+			& > * {
+				margin: 0;
+				width: 50%;
+				padding: 4% 6%;
+
+				@include screen(custom, max, 991) {
+					width: 100%;
+				}
+
+				&:first-child {
+					& > div {
+						padding: 25px;
+					}
+				}
+
+				&:last-child {
+
+					& > div {
+
+						img {
+							width: 100%;
+						}
+					}
+				}
+			}
+
+			&.clear-cols > * {
+				padding: 0;
+				width: calc(50% - 16px);
+				
+				@include screen(custom, max, 991) {
+					width: 100%;
+				}
+
+				&:first-child {
+					& > div {
+						padding: 0;
+					}
+				}
+				
+				&:last-child {
+					margin-left: 32px;
+					
+					@include screen(custom, max, 991) {
+						margin-left: 0;
+					}
+				}
+			}
+		}
+
+		.su-row.no-reverse {
+			@include d-flex;
+			@include flex-direction(row);
+			@include flex-wrap(wrap);
+			@include align-content(center);
+			@include flex-justify(center);
+			@include flex-align(flex-start);
+			margin-bottom: 20px;
+
+			@include screen(custom, max, 991) {
+				margin-bottom: 45px;
+			}
+
+			h3 {
+				text-align: center;
+
+				em {
+					display: block;
+					font-size: 16px;
+
+				}
+			}
+
+			ul {
+				list-style-type: none;
+
+				li {
+					padding: 6px 10px;
+					border-bottom: 1px dotted #dcdcdc;
+					font-size: 90%;
+					margin: 0;
+
+					&:nth-child(even) {
+						background: #fcfcfc;
+					}
+				}
+			}
+
+
+			&.three-cols > * {
+				margin: 0;
+				width: 33.33%;
+				padding: 15px;
+
+				@include screen(custom, max, 991) {
+					width: 50%;
+				}
+
+				@include screen(custom, max, 580) {
+					width: 100%;
+				}
+
+				& > div {
+					box-shadow: 0 0 3px 0 #ccc;
+					padding: 20px 0;
+					background: #f9f9f9;
+
+					&:hover {
+						box-shadow: 0 0 6px 0 #ccc;
+					}
+				}
+
+			}
+
+			&.two-cols{
+				text-align: center;
+
+				& > * {
+					margin: 0;
+					width: 40%;
+					text-align: left;
+					padding: 15px;
+					float: none;
+					@include d-inline-block;
+					transition: all .3s;
+
+					@include screen(custom, max, 600) {
+						width: 100%;
+					}
+
+					& > div {
+						box-shadow: 0 0 3px 0 #ccc;
+						padding: 20px 0;
+						background: #f9f9f9;
+
+						&:hover {
+							box-shadow: 0 0 6px 0 #ccc;
+						}
+					}
+
+
+				}
+			}
+		}
+
+
+
+		div.wp-block-media-text {
+			@include screen(custom, max, 991) {
+				flex-direction: column !important;
+			}
+
+			figure {
+				@include screen(custom, max, 991) {
+					margin-bottom: 15px;
+				}				
+			}
+
+		}
+
+		.schema-faq {
+			& > div {
+				padding: 10px;
+				
+				@include screen(custom, max, 991) {
+					padding: 15px;
+				}
+			}
+			.schema-faq-answer {
+				img {
+					flex:1;
+					margin-right:15px;
+					max-width:40px;
+				}
+			}
+
+			&.faqs-spoiler {
+				position: relative;
+				border-bottom: 1px solid #000;
+				
+				.schema-faq-section {
+					padding: 0;
+				}
+				
+				.schema-faq-question {
+					display: block;
+					position: relative;
+					text-align: left;
+					border-top: 1px solid #000;
+					padding: 20px 0 20px 50px;
+					cursor: pointer;
+					
+					&:before {
+						content: '\f067';
+						font-family: FontAwesome;
+						font-weight: normal;
+						color: #000;
+						display: block;
+						position: absolute;
+						left: 15px;
+						top: 20px;
+					}
+					&.open:before {
+						content: '\f068';
+						animation: fadeIn 0.6s;
+					}
+				}
+
+				.schema-faq-answer {
+					display: none;
+					padding-top: 20px;
+					padding-bottom: 20px;
+					margin: 0 0 0 50px;
+					border-top: 1px solid #000;
+					position: relative;
+				}
+			}
+		}
+	}
+}

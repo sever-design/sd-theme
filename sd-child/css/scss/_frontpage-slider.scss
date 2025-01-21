@@ -1,0 +1,37 @@
+body {
+	&.home {
+
+		.slider {
+			@include max-width( calc(100% - 130px) );
+			margin: 0 65px;
+
+			@include screen(custom, max, 1680) {
+				@include max-width( calc(100% - 80px) );
+				margin: 0 40px;
+			}
+
+			@include screen(custom, max, 1440) {
+				@include max-width( calc(100% - 40px) );
+				margin: 0 20px;
+			}
+
+			@include screen(custom, max, 1360) {
+				@include max-width( calc(100% - 20px) );
+				margin: 0 15px;
+			}
+
+			&__wrapper {
+				& > ul {
+					margin: 0;
+					display: block;
+
+					& > li {
+						&:not(:first-child) {
+							display: none;
+						}
+					}
+				}
+			}
+		}
+	}
+}

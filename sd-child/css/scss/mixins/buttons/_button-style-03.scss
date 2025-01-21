@@ -1,0 +1,31 @@
+p.buttonme > a,
+a.buttonme {
+	@include d-inline-block;
+	padding: 15px 20px;
+	font-family: $_font_button;
+	@include fluid-type($_screen_min_width, $_screen_max_width, 16px, 20px);
+	font-weight: 700;
+	text-decoration: none;
+	position: relative;
+	cursor: pointer;
+
+	&:before,
+	&:after {
+		content: '';
+		display: block;
+		position: absolute;
+		border: 1px solid $_color_txt;
+		width: 100%;
+		height: 100%;
+	}
+
+	&:before {
+		top: -10px;
+		left: -10px;
+	}
+
+	&:after {
+		top: 10px;
+		left: 10px;
+	}
+}
