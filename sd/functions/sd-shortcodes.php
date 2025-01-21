@@ -1,6 +1,6 @@
 <?php
 /*
- * My CPT Slider from Slides post
+ * My CPT Slider from Slides post - test git
  * use layout from sd-child theme in /template-parts/cpt-slider-tmpl
  * usage [slider group="homepage"]
  *
