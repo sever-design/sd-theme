@@ -48,7 +48,7 @@ $useTitle = true;
 							
 							<?php if ( function_exists('yoast_breadcrumb') ) { ?>
 								<div class="breadcrumbs-wrapper">
-									<?php  yoast_breadcrumb( '<div id="breadcrumbs">','</div>' ); ?>
+									<?php  yoast_breadcrumb( '<div id="breadcrumbs" itemscope itemtype="https://schema.org/BreadcrumbList">','</div>' ); ?>
 								</div>
 							<?php } ?>						
 						</div>

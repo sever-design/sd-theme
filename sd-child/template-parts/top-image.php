@@ -30,7 +30,10 @@ if(!is_category()){
 	$attachment_id = get_option('categoryimage_'.$cat_id);
 
 	$backImage = wp_get_attachment_image_src($attachment_id, "full", false);
-	$backImage = $backImage[0];
+	
+	if(!empty($backImage)) {
+		$backImage = $backImage[0];
+	}
 }
 
 if(empty($backImage)) {
@@ -42,6 +45,8 @@ if(empty($backImage)) {
 $useTitle = true;
 
 $showExcerpt = true;
+
+$showForm = false;
 ?>
 
 		<div id="page-top-image" class="image">
@@ -50,7 +55,7 @@ $showExcerpt = true;
 					<div class="container-wrapper">
 						<div class="container">
 							<div class="row">
-								<div class="col-md-12 align-self-center">
+								<div class="col-md-8 align-self-center">
 									<?php
 									//show titile based on settings
 									if( $useTitle ) {
@@ -61,17 +66,31 @@ $showExcerpt = true;
 									//show breadcrumbs if enadled in Yoast
 									if ( function_exists('yoast_breadcrumb') ) { ?>
 										<div class="breadcrumbs-wrapper">
-											<?php  yoast_breadcrumb( '<div id="breadcrumbs">','</div>' ); ?>
+											<?php  yoast_breadcrumb( '<div id="breadcrumbs" itemscope itemtype="https://schema.org/BreadcrumbList">','</div>' ); ?>
 										</div>
 									<?php } ?>
 									<?php
 									//show page excerpt based on settings
-									if( $showExcerpt ) { ?>
+									if( $showExcerpt ) {
+										global $post;
+										if(!empty( rwmb_meta('hs_altexcerpt',get_the_ID() ))) {
+											$excerpt =  apply_filters('the_content', rwmb_meta('hs_altexcerpt',get_the_ID() ) );
+										} else {
+											
+											$excerpt = apply_filters('the_content', $post->post_excerpt );
+										}
+										
+										?>
 										<div class="page-excerpt">
-											<?php echo apply_filters('the_content', get_the_excerpt()); ?>
+											<?php echo $excerpt; ?>
 										</div>									
 									<?php } ?>
 								</div>
+								<?php if( $showForm ) { ?>
+								<div class="col-md-4 align-self-center">
+									<?php echo do_shortcode('[contact-form-7 id="c95ac44" title="Contact form 1"]'); ?>
+								</div>
+								<?php } ?>
 							</div>
 						</div>
 					</div>			

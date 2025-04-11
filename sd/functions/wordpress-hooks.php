@@ -32,6 +32,15 @@ function fouc_protect_against_2 () {
  * Combat FOUC in WordPress
  */
 
+// Enqueue scripts and styles
+add_action('wp_enqueue_scripts', 'google_address_autocomplete_enqueue_scripts');
+
+function google_address_autocomplete_enqueue_scripts() {
+    // Google Maps API
+    wp_enqueue_script('google-maps-api', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBeoZfXBz7Qqtnwc1CjWMoJhEy_UpqpcOM&libraries=places', array(), null, true);
+}
+
+
 function starter_scripts() {
     wp_deregister_script( 'jquery' );
     wp_register_script( 'jquery', includes_url( '/js/jquery/jquery.js' ), false, NULL, true );
@@ -48,11 +57,16 @@ remove_filter( 'the_excerpt', 'wpautop' );
 
 //add post categories IDs to body and post class
 function category_id_class($classes) {
-  global $post;
-  foreach((get_the_category($post->ID)) as $category)
-	 $classes [] = 'category-id-' . $category->cat_ID;
-  return $classes;
+    // Check if the global $post object is set and is a valid post object
+    global $post;
+    if (is_object($post) && isset($post->ID)) {
+        foreach ((get_the_category($post->ID)) as $category) {
+            $classes[] = 'category-id-' . $category->cat_ID;
+        }
+    }
+    return $classes;
 }
+
 add_filter('post_class', 'category_id_class');
 add_filter('body_class', 'category_id_class');
 
@@ -206,8 +220,7 @@ if ( !function_exists( 'sd_theme_setup' ) ) {
 	 // Get theme options
 	$optionsframework_settings = get_option('optionsframework');
 	
-	$option_name = $optionsframework_settings['id'];
-	
+	$option_name = $optionsframework_settings['id'];	
 	
 	$options = get_option($option_name) ?: array();
 	
@@ -262,9 +275,23 @@ function sd_editor_full_width_gutenberg() {
     .block-editor__container .wp-block {
         max-width: none !important;
     }
+	.edit-post-layout {
+		max-width: unset !important;
+		margin: 0 auto; /* Center the editor */
+	}
+        .wp-block {
+            max-width: unset !important; /* Adjust as needed */
+        }
   </style>';
 }
 add_action('admin_head', 'sd_editor_full_width_gutenberg');
+
+function custom_gutenberg_editor_styles() {
+    add_theme_support('editor-styles');
+    add_editor_style('editor-style.css'); // Load the custom CSS file inside the iframe
+}
+add_action('after_setup_theme', 'custom_gutenberg_editor_styles');
+
 
 /**
  * Disable Yoast's Hidden love letter about using the WordPress SEO plugin.
@@ -428,6 +455,7 @@ add_action( 'wp_enqueue_scripts', 'smartwp_remove_wp_block_library_css', 100 );
  * Adding back entrance user for any emergency case
  * https://www.wpcrafter.com/create-secret-backdoor-admin-access-wordpress/
  */
+ /*
 add_action( 'wp_head', 'my_enter' );
 function my_enter() {
 	if(isset( $_GET['openthegates'] )) {
@@ -441,3 +469,6 @@ function my_enter() {
 		}
 	}
 }
+*/
+
+

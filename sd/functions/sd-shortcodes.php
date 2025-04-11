@@ -29,7 +29,7 @@ function display_slider( $atts ) {
 
     $query = new WP_Query( $args );
     ob_start();
-	echo '<div class="slider-wrapper owl-carousel">';
+	echo '<div class="slider-wrapper">';
     if ( $query->have_posts() ) {
         while ( $query->have_posts() ) {
             $query->the_post();
@@ -51,6 +51,95 @@ function display_slider( $atts ) {
 add_shortcode( 'sd_cpt_slider', 'display_slider' );
 
 /* END My CPT Slider from Slides post */
+
+
+
+
+// Register the [get_page_intro] shortcode
+// Register the [get_page_intro] shortcode
+// Usage: [get_page_intro page_id="42" read_more="Learn More" alt_title="Other than page title" alt_excerpt="Custom excerpt text"]
+global $page_intro_counter;
+$page_intro_counter = 0;
+
+function get_page_intro_shortcode($atts) {
+    global $page_intro_counter;
+    $page_intro_counter++; // Increment counter for each use
+
+    $atts = shortcode_atts(
+        array(
+            'page_id'     => '',
+            'read_more'   => 'Read More',
+            'alt_title'   => '', // Alternative title
+            'alt_excerpt' => '', // Alternative excerpt
+        ),
+        $atts,
+        'get_page_intro'
+    );
+
+    $page_id = intval($atts['page_id']);
+    if (!$page_id) {
+        return 'Invalid page ID';
+    }
+
+    $page = get_post($page_id);
+    if (!$page) {
+        return 'Page not found';
+    }
+
+    // Use alt_title if provided, otherwise use the real page title
+    $title = !empty($atts['alt_title']) ? esc_html($atts['alt_title']) : get_the_title($page_id);
+
+    // Use alt_excerpt if provided, otherwise use the actual page excerpt
+    $excerpt = !empty($atts['alt_excerpt']) ? esc_html($atts['alt_excerpt']) : apply_filters('the_content', get_the_excerpt($page_id));
+
+    $read_more_text = esc_html($atts['read_more']);
+    $read_more_link = get_permalink($page_id);
+
+    ob_start(); ?>
+    <div class="page-intro-accordion page-intro-accordion-<?php echo $page_intro_counter; ?>">
+        <div class="accordion-item">
+            <div class="accordion-header">
+                <span class="accordion-title"><?php echo esc_html($title); ?></span>
+                <span class="accordion-toggle-icon closed"></span> <!-- Default closed (up arrow) -->
+            </div>
+            <div class="accordion-content" style="display: none;">
+                <?php echo $excerpt; ?>
+                <p class="linkme">
+                    <a href="<?php echo esc_url($read_more_link); ?>" class="read-more"><?php echo $read_more_text; ?></a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+add_shortcode('get_page_intro', 'get_page_intro_shortcode');
+
+
+// Enqueue jQuery for the accordion
+function enqueue_page_intro_scripts() {
+    wp_enqueue_script('jquery');
+    ?>
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            $('.accordion-header').click(function() {
+                var $icon = $(this).find('.accordion-toggle-icon');
+                var $content = $(this).next('.accordion-content');
+
+                // Toggle visibility of the content
+                $content.slideToggle();
+
+                // Toggle class 'closed' on the icon
+                $icon.toggleClass('closed');
+            });
+        });
+    </script>
+    <?php
+}
+add_action('wp_footer', 'enqueue_page_intro_scripts');
+
+
+
 
 function custom_format_to_html($content) {
     // Convert [strong]...[/strong] to <strong>...</strong>
@@ -160,6 +249,8 @@ add_shortcode('child_categories_menu', 'wp_child_categories_menu');
             'icon_w' => '16px',
             'icon_h' => '16px',
             'hide_prefix' => false, // New option to control prefix visibility
+			'hide_phone' => false, // New option to control phone visibility
+			'raw' => false, // NEW: Added raw optio
         ), $atts);
 
         // Get theme options
@@ -169,6 +260,11 @@ add_shortcode('child_categories_menu', 'wp_child_categories_menu');
 
         if (!isset($options[$a['option_name']])) {
             return $default;
+        }
+		
+        // Return raw value if 'raw' is set to true
+        if ($a['raw'] && $a['option_name'] === 'site_contact_phone') {
+            return preg_replace('/[^0-9]/', '', $options[$a['option_name']]); // Clean phone number
         }
 
         // Define field configurations
@@ -251,7 +347,7 @@ add_shortcode('child_categories_menu', 'wp_child_categories_menu');
         if ($config['is_link']) {
             $value = generate_link($value, $config, $options, $icon . $text);
         } else {
-            $value = '<span>' . $icon . $text . '</span>';
+            $value = '<span>' . $icon . do_shortcode($text) . '</span>';
         }
 
         // Add wrapper class
@@ -303,8 +399,12 @@ add_shortcode('child_categories_menu', 'wp_child_categories_menu');
 			$text_parts[] = sprintf('<span class="_prefix hidden">%s</span>', $atts['custom_text']);
 		}
         
-        // Add main text
-        $text_parts[] = sprintf('<span class="text-wrap">%s</span>', $value);
+        if (!$atts['hide_phone']) {
+			// Add main text
+			$text_parts[] = sprintf('<span class="text-wrap">%s</span>', $value);
+        } else {
+			$text_parts[] = sprintf('<span class="text-wrap hidden">%s</span>', $value);
+		}
         
         return implode(' ', $text_parts);
     }
@@ -342,48 +442,77 @@ add_shortcode('get_theme_option', 'sd_theme_option');
 
 /**
  * Return a list of linked social media icons, based on the urls provided in the Theme Options
+What This Does
+Supports raw=true for extracting only links.
+
+Supports link=social_xxx to get a specific platform's link.
+
+Keeps the original formatted version when raw is not set.
+ [get_social_media raw="true"]
+ https://facebook.com/yourpage
+https://twitter.com/yourpage
+https://instagram.com/yourpage
+
+[get_social_media raw="true" link="social_facebook"]
+https://facebook.com/yourpage
  */
-add_shortcode('get_social_media', 'sd_get_social_media');
-if ( ! function_exists( 'sd_get_social_media' ) ) {
-	function sd_get_social_media() {
-		
-		$icons = array(
-			array( 'url' => of_get_option( 'social_facebook', '' ), 'icon' => 'fa-facebook', 'title' => esc_html__( 'Facebook', 'sd' ) ),
-			array( 'url' => of_get_option( 'social_twitter', '' ), 'icon' => 'fa-twitter', 'title' => esc_html__( 'Twitter', 'sd' ) ),
-			array( 'url' => of_get_option( 'social_homestars', '' ), 'icon' => 'fa-homestars', 'title' => esc_html__( 'Homestars', 'sd' ) ),
-			array( 'url' => of_get_option( 'social_tiktok', '' ), 'icon' => 'fa-tiktok', 'title' => esc_html__( 'TikTok', 'sd' ) ),
-			array( 'url' => of_get_option( 'social_linkedin', '' ), 'icon' => 'fa-linkedin', 'title' => esc_html__( 'LinkedIn', 'sd' ) ),
-			array( 'url' => of_get_option( 'social_houzz', '' ), 'icon' => 'fa-houzz', 'title' => esc_html__( 'Houzz', 'sd' ) ),
-			array( 'url' => of_get_option( 'social_youtube', '' ), 'icon' => 'fa-youtube', 'title' => esc_html__( 'YouTube', 'sd' ) ),
-			array( 'url' => of_get_option( 'social_instagram', '' ), 'icon' => 'fa-instagram', 'title' => esc_html__( 'Instagram', 'sd' ) ),
-			array( 'url' => of_get_option( 'social_vimeo', '' ), 'icon' => 'fa-vimeo', 'title' => esc_html__( 'Vimeo', 'sd' ) ),
-			array( 'url' => of_get_option( 'social_pinterest', '' ), 'icon' => 'fa-pinterest', 'title' => esc_html__( 'Pinterest', 'sd' ) ),
-			array( 'url' => of_get_option( 'social_yelp', '' ), 'icon' => 'fa-yelp', 'title' => esc_html__( 'Yelp', 'sd' ) ),
-			array( 'url' => of_get_option( 'social_gmaps', '' ), 'icon' => 'fa-map-marker', 'title' => esc_html__( 'GMap', 'sd' ) ),
-		);
-		$output = '';
-		foreach ( $icons as $key ) {
-			
-			$value = $key['url'];
+if (!function_exists('sd_get_social_media')) {
+    function sd_get_social_media($atts) {
+        $a = shortcode_atts(array(
+            'raw' => false, // NEW: Return links only
+            'link' => '',   // NEW: Return specific social media link
+        ), $atts);
 
-			if ( !empty( $value ) ) {
-				
-				$output .= sprintf( '<li><a href="%1$s" title="%2$s"%3$s><span><i class="fa fab %4$s"></i></span></a></li>',
-					esc_url( $value ),
-					$key['title'],
-					( !of_get_option( 'social_newtab', '0' ) ? '' : ' target="_blank"' ),
-					$key['icon']
-				);
-			}
-		}
+        $icons = array(
+            'social_facebook'  => array('icon' => 'fa-facebook', 'title' => 'Facebook'),
+            'social_twitter'   => array('icon' => 'fa-twitter', 'title' => 'Twitter'),
+            'social_homestars' => array('icon' => 'fa-homestars', 'title' => 'Homestars'),
+            'social_tiktok'    => array('icon' => 'fa-tiktok', 'title' => 'TikTok'),
+            'social_linkedin'  => array('icon' => 'fa-linkedin', 'title' => 'LinkedIn'),
+            'social_houzz'     => array('icon' => 'fa-houzz', 'title' => 'Houzz'),
+            'social_youtube'   => array('icon' => 'fa-youtube', 'title' => 'YouTube'),
+            'social_instagram' => array('icon' => 'fa-instagram', 'title' => 'Instagram'),
+            'social_vimeo'     => array('icon' => 'fa-vimeo', 'title' => 'Vimeo'),
+            'social_pinterest' => array('icon' => 'fa-pinterest', 'title' => 'Pinterest'),
+            'social_yelp'      => array('icon' => 'fa-yelp', 'title' => 'Yelp'),
+            'social_gmaps'     => array('icon' => 'fa-map-marker', 'title' => 'GMap'),
+        );
 
-		if ( !empty( $output ) ) {
-			$output = '<ul class="social-list">' . $output . '</ul>';
-		}
+        // If a specific link is requested, return only that link
+        if (!empty($a['link']) && isset($icons[$a['link']])) {
+            $url = of_get_option($a['link'], '');
+            return (!empty($url) && $a['raw']) ? esc_url($url) : '';
+        }
 
-		return $output;
-	}
+        $output = '';
+        foreach ($icons as $key => $data) {
+            $value = of_get_option($key, '');
+
+            if (!empty($value)) {
+                // If raw is true, return only links
+                if ($a['raw']) {
+                    $output .= esc_url($value) . "\n";
+                } else {
+                    // Default formatted output
+                    $output .= sprintf(
+                        '<li><a href="%1$s" title="%2$s"%3$s><span><i class="fa fab %4$s"></i></span></a></li>',
+                        esc_url($value),
+                        esc_html__($data['title'], 'sd'),
+                        (!of_get_option('social_newtab', '0') ? '' : ' target="_blank"'),
+                        $data['icon']
+                    );
+                }
+            }
+        }
+
+        if ($a['raw']) {
+            return trim($output); // Just return raw links, one per line
+        }
+
+        return !empty($output) ? '<ul class="social-list">' . $output . '</ul>' : '';
+    }
 }
+add_shortcode('get_social_media', 'sd_get_social_media');
 
 // shortcode for specific category.  Use on homepage (or wherever) to display a list of categories of posts
 function show_posts( $atts ) {
@@ -788,6 +917,17 @@ function show_latest_projects_shortcode($atts) {
 }
 add_shortcode( 'show_service_pages', 'show_latest_projects_shortcode' );
 
+/*
+ * print current year
+ */
+function sd_print_current_year($atts) {
+    ob_start();
+    echo date('Y');
+    $show_latest_projects = ob_get_clean();
+    return $show_latest_projects;
+}
+add_shortcode( 'print_year', 'sd_print_current_year' );
+
 
 
 function hs_section($atts, $content = null) {
@@ -854,9 +994,9 @@ add_shortcode( 'svg', 'sd_customsvg_shortcode' );
 
 
 /*
- * use [ytvideo video_id="YOUR_VIDEO_ID" video_alt="Your video description" autoplay="true" loop="true"]
+ * use [ytvideo video_id="YOUR_VIDEO_ID" video_alt="Your video description" autoplay="true" loop="true" custom_splash="imgurl"]
  */
-function sd_yt_vidos($youtubeID, $video_alt, $autoplay = 'false', $loop = 'false') {
+function sd_yt_vidos($youtubeID, $custom_img, $video_alt, $autoplay = 'false', $loop = 'false') {
     if(empty($video_alt)) {
         $video_alt = 'Video';
     }
@@ -872,12 +1012,23 @@ function sd_yt_vidos($youtubeID, $video_alt, $autoplay = 'false', $loop = 'false
     // Build loop parameter for YouTube video (needs playlist parameter for loop to work)
     $loop_param = ($loop_value) ? '&loop=1&playlist=' . $youtubeID : '';
 
-    // Embed the YouTube video with autoplay and loop based on parameters
-    echo '<div class="yt-video-wrapper auto-play-'. $autoplay_value .'">'
-        . '<div class="img-splash" style="background: url(https://img.youtube.com/vi/'.$youtubeID.'/maxresdefault.jpg) no-repeat center; background-size:cover;"></div>'
-        . '<a href="#" class="play" style="background: url(https://img.youtube.com/vi/'.$youtubeID.'/maxresdefault.jpg) no-repeat center; background-size:cover;"><i class="fa fa-youtube-play"></i></a>'
-        . '<iframe width="100%" height="315" data-src="https://www.youtube.com/embed/'.$youtubeID.'?autoplay=0&rel=0&controls=0&modestbranding=1&iv_load_policy=3&fs=0&showinfo=0'.$loop_param.$autoplayUrlParam.'" src="" title="'.$video_alt.'" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
-    . '</div>';
+	if(!empty($custom_img)) {
+		// Embed the YouTube video with autoplay and loop based on parameters
+		echo '<div class="yt-video-wrapper auto-play-'. $autoplay_value .'">'
+			. '<div class="img-splash" style="background: url('.$custom_img.') no-repeat center; background-size:cover;"></div>'
+			. '<a href="#" class="play" style="background: url('.$custom_img.') no-repeat center; background-size:cover;"><i class="fa fa-youtube-play"></i></a>'
+			. '<iframe width="100%" height="315" data-src="https://www.youtube.com/embed/'.$youtubeID.'?autoplay=0&rel=0&controls=0&modestbranding=1&iv_load_policy=3&fs=0&showinfo=0'.$loop_param.$autoplayUrlParam.'" src="" title="'.$video_alt.'" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
+		. '</div>';
+	} else {
+		// Embed the YouTube video with autoplay and loop based on parameters
+		echo '<div class="yt-video-wrapper auto-play-'. $autoplay_value .'">'
+			. '<div class="img-splash" style="background: url(https://img.youtube.com/vi/'.$youtubeID.'/maxresdefault.jpg) no-repeat center; background-size:cover;"></div>'
+			. '<a href="#" class="play" style="background: url(https://img.youtube.com/vi/'.$youtubeID.'/maxresdefault.jpg) no-repeat center; background-size:cover;"><i class="fa fa-youtube-play"></i></a>'
+			. '<iframe width="100%" height="315" data-src="https://www.youtube.com/embed/'.$youtubeID.'?autoplay=0&rel=0&controls=0&modestbranding=1&iv_load_policy=3&fs=0&showinfo=0'.$loop_param.$autoplayUrlParam.'" src="" title="'.$video_alt.'" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
+		. '</div>';		
+	}
+
+
 }
 
 function sd_ytube_lazy_embedd($atts) {
@@ -885,16 +1036,18 @@ function sd_ytube_lazy_embedd($atts) {
         'video_id'   => '',
         'video_alt'  => '',
         'autoplay'   => 'false', // Default autoplay is false
-        'loop'       => 'false'  // Default loop is false
+        'loop'       => 'false',  // Default loop is false
+		'custom_splash' => ''
     ), $atts );
 
     $video_id = $a['video_id'];
     $video_alt = $a['video_alt'];
     $autoplay = $a['autoplay'];
     $loop = $a['loop'];
+	$custom_img = $a['custom_splash'];
 
     ob_start();
-    sd_yt_vidos($video_id, $video_alt, $autoplay, $loop);
+    sd_yt_vidos($video_id, $video_alt, $autoplay, $loop, $custom_img);
     $vidos = ob_get_clean();
     return $vidos;
 }
@@ -906,7 +1059,7 @@ to test YT 2
 /*
  * Shortcode: [ytvideo2 video_id="YOUR_VIDEO_ID" video_alt="Your video description" autoplay="true" loop="true"]
 */ 
-function sd_yt_videos($youtubeID, $video_alt = 'Video', $autoplay = 'false', $loop = 'false') {
+function sd_yt_videos($youtubeID, $custom_img, $video_alt = 'Video', $autoplay = 'false', $loop = 'false') {
     // Validate inputs
     if (empty($youtubeID)) {
         return '<p>Error: No video ID provided.</p>';
@@ -926,6 +1079,23 @@ function sd_yt_videos($youtubeID, $video_alt = 'Video', $autoplay = 'false', $lo
     $iframe_src = "https://www.youtube.com/embed/{$youtubeID}?autoplay=0&rel=0&controls=1&modestbranding=1&iv_load_policy=3&fs=1&showinfo=0{$loop_param}";
 
     // Embed HTML
+	
+	if(!empty($custom_img)) {
+    ob_start();
+    ?>
+    <div class="yt-video-wrapper auto-play-<?php echo $autoplay_value; ?>">
+        <!-- Video Thumbnail -->
+        <div class="img-splash" style="background: url('<?php echo $custom_img; ?>') no-repeat center; background-size: cover;">
+            <a href="#" class="play-button" data-src="<?php echo $iframe_src; ?>">
+                <i class="fa fa-youtube-play"></i>
+            </a>
+        </div>
+        <!-- Lazy-loaded iframe -->
+        <iframe width="100%" height="315" data-src="<?php echo $iframe_src; ?>" src="" title="<?php echo esc_attr($video_alt); ?>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+    </div>
+    <?php
+    return ob_get_clean();
+	} else {
     ob_start();
     ?>
     <div class="yt-video-wrapper auto-play-<?php echo $autoplay_value; ?>">
@@ -940,7 +1110,8 @@ function sd_yt_videos($youtubeID, $video_alt = 'Video', $autoplay = 'false', $lo
     </div>
     <?php
     return ob_get_clean();
-}
+	}
+}	
 
 function sd_ytube_lazy_embed_shortcode($atts) {
     $atts = shortcode_atts([
@@ -948,9 +1119,10 @@ function sd_ytube_lazy_embed_shortcode($atts) {
         'video_alt'  => '',
         'autoplay'   => 'false',
         'loop'       => 'false',
+		'custom_splash' => ''
     ], $atts);
 
-    return sd_yt_videos($atts['video_id'], $atts['video_alt'], $atts['autoplay'], $atts['loop']);
+    return sd_yt_videos($atts['video_id'], $atts['video_alt'], $atts['autoplay'], $atts['loop'], $atts['custom_splash']);
 }
 
 add_shortcode('ytvideo2', 'sd_ytube_lazy_embed_shortcode');

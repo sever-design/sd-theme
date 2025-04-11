@@ -19,7 +19,16 @@ html {
 }
 
 html .mceContentBody {
-	max-width: 790px;
+	max-width: 100%;
+}
+
+.editor-styles-wrapper {
+    max-width: unset !important; /* Adjust width */
+    margin: 0 auto; /* Center the editor */
+}
+
+.wp-block {
+    max-width: unset !important; /* Adjust content width */
 }
 
 body {
@@ -33,6 +42,16 @@ body {
 }
 
 
+.editor-visual-editor__post-title-wrapper {
+	background: #f9f9f9;
+	outline: 1px solid #ebebeb;
+	margin: 0 0 25px !important;
+	padding: 15px;
+}
+
+.editor-visual-editor__post-title-wrapper .wp-block {
+	margin: 0;
+}
 /* ==========================================================================
    Header
    ========================================================================== */

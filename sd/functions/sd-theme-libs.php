@@ -1,126 +1,4 @@
 <?php
-// Add the update check for the theme
-function sd_theme_auto_update_check($transient) {
-    // Skip the update check if we're on a page with no need for updates
-    if (empty($transient->checked)) {
-        return $transient;
-    }
-
-    // GitHub API URL to check the latest release
-    $repo_url = 'https://api.github.com/repos/sever-design/sd-theme/releases/latest';
-    $response = wp_remote_get($repo_url);
-
-    if (is_wp_error($response)) {
-        return $transient;
-    }
-
-    $release = json_decode(wp_remote_retrieve_body($response), true);
-
-    if (isset($release['tag_name'])) {
-        // Get the latest release version from GitHub
-        $latest_version = $release['tag_name'];
-        
-        // Get the current theme version
-        $current_version = wp_get_theme('sd')->get('Version');
-
-        // If the GitHub version is newer, update the version
-        if (version_compare($latest_version, $current_version, '>')) {
-            // Set the update data so WordPress knows about the newer version
-            $transient->response['sd'] = array(
-                'theme' => 'sd', // Theme folder name
-                'new_version' => $latest_version,
-                'url' => $release['html_url'], // GitHub release page URL
-                'package' => $release['zipball_url'] // GitHub zipball URL
-            );
-        }
-    }
-
-    return $transient;
-}
-
-add_filter('site_transient_update_themes', 'sd_theme_auto_update_check');
-
-// Add the update API call
-function sd_theme_auto_update($upgrader_object, $options) {
-    // Check if we are dealing with theme updates
-    if ($options['action'] == 'update' && $options['type'] == 'theme') {
-        // Get the theme update info
-        $theme_slug = 'sd'; // The theme slug
-        $theme = wp_get_theme($theme_slug);
-
-        if (isset($options['themes'][$theme_slug])) {
-            $theme_update = $options['themes'][$theme_slug];
-            
-            // If the update is from GitHub, trigger the update from GitHub
-            if (isset($theme_update['package']) && strpos($theme_update['package'], 'github.com') !== false) {
-                // Download the theme zip file from GitHub
-                $theme_zip = download_url($theme_update['package']);
-                
-                if (is_wp_error($theme_zip)) {
-                    return;
-                }
-
-                // Unzip the downloaded file to the theme directory
-                $result = unzip_file($theme_zip, get_theme_root() . '/' . $theme_slug);
-
-                // Clean up
-                @unlink($theme_zip);
-            }
-        }
-    }
-}
-
-add_action('upgrader_process_complete', 'sd_theme_auto_update', 10, 2);
-
-
-function sd_theme_github_update_checker() {
-    // GitHub API endpoint for your repository
-    $repo_url = 'https://api.github.com/repos/sever-design/sd-theme/releases/latest';
-
-    // Get the latest release data
-    $response = wp_remote_get($repo_url);
-
-    if (is_wp_error($response)) {
-        error_log('Error fetching GitHub API: ' . $response->get_error_message());
-        return;
-    }
-
-    $release = json_decode(wp_remote_retrieve_body($response), true);
-    
-    if (empty($release)) {
-        error_log('No release data found.');
-        return;
-    }
-
-    $latest_version = $release['tag_name']; // Version from GitHub
-
-    // Get current theme version
-    $current_version = wp_get_theme('sd')->get('Version');
-
-    // Log the versions for debugging
-    error_log("Current Version: " . $current_version);
-    error_log("Latest Version: " . $latest_version);
-
-    // Compare versions
-    if (version_compare($latest_version, $current_version, '>')) {
-        // Log that a new version is available
-        error_log('A newer version of the theme is available.');
-        // You could trigger a notification or update process here
-    }
-	
-    // Compare versions
-    if (version_compare($latest_version, $current_version, '>')) {
-        // Display admin notice
-        add_action('admin_notices', function() {
-            echo '<div class="notice notice-warning is-dismissible">
-                    <p><strong>New theme update available!</strong> A newer version of the SD Theme is available. Please update it from GitHub.</p>
-                </div>';
-        });
-    }
-}
-
-add_action('admin_init', 'sd_theme_github_update_checker');
-
 //Add Styles for Admin Metabox Layout
 /*
 add_action('admin_head', 'my_custom_styles');
@@ -163,7 +41,7 @@ function sd_scripts_styles() {
 
 	
 	//For Catgory / Taxonomy
-	elseif( is_category() || is_tax() || is_archive()  ) {
+	elseif( ( is_category() || is_tax() || is_archive() ) && !is_product_category() && !is_taxonomy('product_brand')  ) {
 		
 		$fileJS = get_theme_file_path( 'js/script-loader-category.php' );
 		
@@ -200,25 +78,6 @@ function sd_scripts_styles() {
 		wp_enqueue_script( 'post-js-files' );
 	}
 	
-
-	    
-
-	// For Woo
-	elseif ( class_exists( 'woocommerce' ) ) {
-		
-		$fileJS = get_theme_file_path( 'js/script-loader-woocommerce.php' );
-		
-		
-		if ( file_exists( $fileJS ) ) {
-			if(is_woocommerce()) {
-				wp_register_script( 'woo-js-files', $theme_path . 'js/script-loader-woocommerce.php', '', '', true );
-				wp_enqueue_script( 'woo-js-files' );
-			}
-		} else {
-			wp_register_script( 'woo-js-files', $theme_path . 'js/script-loader.php', '', '', true );
-		}
-	}
-	
 	// For Error Page 404
 	elseif(is_404()) {
 		
@@ -231,8 +90,24 @@ function sd_scripts_styles() {
 	}
 	
 	else {
-		wp_register_script( 'other-js-files', $theme_path . 'js/script-loader.php', '', '', true );
-		wp_enqueue_script( 'other-js-files' );
+		//wp_register_script( 'other-js-files', $theme_path . 'js/script-loader.php', '', '', true );
+		//wp_enqueue_script( 'other-js-files' );
+	}
+
+	// For Woo
+	
+	if ( in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins'))) && !is_front_page() ) {
+		
+		$fileJSWoo = get_theme_file_path( 'js/script-loader-woocommerce.php' );
+		
+		if ( file_exists( $fileJSWoo ) ) {
+			
+			wp_enqueue_script( 'woo-js-files', $theme_path . 'js/script-loader-woocommerce.php', '', '', true );
+			
+		} else {
+			//wp_register_script( 'woo-js-files', $theme_path . 'js/script-loader.php', '', '', true );
+			//wp_enqueue_script( 'woo-js-files' );
+		}
 	}
 	
 }
@@ -241,6 +116,17 @@ add_action( 'wp_enqueue_scripts', 'sd_scripts_styles' );
 
 function sd_add_footer_styles() {
 	$theme_path = trailingslashit( get_stylesheet_directory_uri() );
+
+    // Include login styles for wp-login.php and wp-admin
+    if (is_login_page() || is_admin()) {
+        $fileCSS = get_theme_file_path('css/login-style.css');
+
+        if (file_exists($fileCSS)) {
+            wp_register_style('theme-login', $theme_path . 'css/login-style.css', [], null, 'all');
+            wp_enqueue_style('theme-login');
+        }
+        return; // Stop execution to prevent unnecessary styles on login/admin pages
+    }
 	
 	/*
 	 * Register and enqueue our stylesheets
@@ -286,6 +172,7 @@ function sd_add_footer_styles() {
 	}
 	
 	//for Offer Page
+	/*
 	elseif( is_page(7141) ) {
 
 		$fileCSS = get_theme_file_path( 'css/theme-offerpage.css' );
@@ -298,8 +185,9 @@ function sd_add_footer_styles() {
 		}
 
 	}
+	*/
 	
-	elseif( is_category() || is_tag() || is_tax() ){
+	elseif( is_category() || is_tag() || is_tax() && !is_product_category() && !is_taxonomy('product_brand')  ){
 		
 		$fileCSS = get_theme_file_path( 'css/theme-category.css' );
 		
@@ -311,7 +199,7 @@ function sd_add_footer_styles() {
 		}
 	}
 
-	elseif(is_page() && !is_front_page() && is_page_template( 'page-templates/front-page.php' ) ){
+	elseif(is_page() && !is_front_page() ){
 		
 		$fileCSS = get_theme_file_path( 'css/theme-page.css' );
 		
@@ -362,7 +250,23 @@ function sd_add_footer_styles() {
 		wp_register_style('theme-main', $theme_path . 'css/theme.css', 'all');
 		wp_enqueue_style( 'theme-main' );
 	}
-
+	
+	// For Woo
+	
+	if ( in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins'))) ) {
+		
+		$fileCSS2 = get_theme_file_path( 'css/theme-woo.css' );
+		
+		if ( file_exists( $fileCSS2 ) ) {
+			wp_register_style( 'theme-woo', $theme_path . 'css/theme-woo.css', 'all' );
+			wp_enqueue_style( 'theme-woo' );
+		}
+	}
 	    
 };
 add_action( 'get_footer', 'sd_add_footer_styles' );
+
+// Helper function to detect login page
+function is_login_page() {
+    return in_array($GLOBALS['pagenow'], ['wp-login.php', 'wp-register.php']);
+}

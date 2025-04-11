@@ -22,8 +22,8 @@
         transition: background .3s, color .3s;
 
         &:hover {
-            background-color: $_color_txt_light;
-            color: $_bg_light;
+            //background-color: $_color_txt_light;
+            color: $_color_txt;
         }
     }
 

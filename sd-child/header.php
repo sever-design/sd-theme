@@ -20,13 +20,13 @@ function sanitize_output($buffer)
 //ob_start("sanitize_output");
 ?><!doctype html>
 <!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" <?php language_attributes(); ?>> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" <?php language_attributes(); ?>> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9" <?php language_attributes(); ?>> <![endif]-->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" <?php language_attributes(); ?> itemscope itemtype="http://schema.org/WebPage"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" <?php language_attributes(); ?> itemscope itemtype="http://schema.org/WebPage"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" <?php language_attributes(); ?> itemscope itemtype="http://schema.org/WebPage"> <![endif]-->
 <!-- Consider adding a manifest.appcache: h5bp.com/d/Offline -->
-<!--[if gt IE 8]><!--> <html class="no-js" <?php language_attributes(); ?>> <!--<![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" <?php language_attributes(); ?> itemscope itemtype="http://schema.org/WebPage"> <!--<![endif]-->
 <head>
-	<meta name="theme-color" content="#3b230e" />
+	<meta name="theme-color" content="#202b3f" />
 	<meta charset="<?php bloginfo( 'charset' ); ?>" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta http-equiv="cleartype" content="on">
@@ -116,13 +116,13 @@ if(!is_front_page()){
 }
 ?>
 
-<body <?php body_class($bClass); ?>>
+<body <?php body_class($bClass); ?> itemscope itemtype="http://schema.org/WebPage">
 
 <div id="wrapper" class="hfeed site">
-	<header id="headercontainer" class="site__header">
+	<header id="headercontainer" class="site__header" itemscope itemtype="http://schema.org/WebSite">
 		<?php get_template_part('template-parts/header','main'); ?>
 	</header>
 
-	<main id="maincontentcontainer" class="site__content">
+	<main id="maincontentcontainer" class="site__content" role="main">
 		<?php	do_action( 'quark_before_woocommerce' ); ?>
 		

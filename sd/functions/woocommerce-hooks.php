@@ -1,4 +1,64 @@
 <?php
+/**
+ * Add Brand Taxonomy Link to Product Page
+ */
+function add_product_brand_link() {
+    global $product;
+    
+    // Get the brand terms for the current product
+    $brand_terms = get_the_terms($product->get_id(), 'product_brand');
+    
+    if ($brand_terms && !is_wp_error($brand_terms)) {
+        echo '<div class="product-brand-info">';
+        
+        foreach ($brand_terms as $brand) {
+            // Get the brand page URL
+            $brand_link = get_term_link($brand, 'product_brand');
+            
+            if (!is_wp_error($brand_link)) {
+                echo sprintf(
+                    '<a href="%s" class="product-brand-link" title="View all products from %s">%s</a>',
+                    esc_url($brand_link),
+                    esc_attr($brand->name),
+                    esc_html($brand->name)
+                );
+            }
+        }
+        
+        echo '</div>';
+    }
+}
+
+// Hook the function to display on the product page
+add_action('woocommerce_single_product_summary', 'add_product_brand_link', 25);
+
+// Optional: If you want to add to product archives as well
+add_action('woocommerce_after_shop_loop_item_title', 'add_product_brand_link', 5);
+
+/**************************************************/
+
+/**
+ * Add YITH Wishlist button to both single product and shop/category pages
+ */
+function add_wishlist_to_product_displays() {
+    // For single product page
+    add_action('woocommerce_before_single_product_summary', function() {
+        echo '<div class="wishlist-icon-container single-product">';
+        do_action('yith_wcwl_table_after_product_name');
+        echo '</div>';
+    }, 15);
+
+    // For shop/category/archive pages
+    add_action('woocommerce_before_shop_loop_item', function() {
+        echo '<div class="wishlist-icon-container shop-loop">';
+        do_action('yith_wcwl_table_after_product_name');
+        echo '</div>';
+    }, 5);
+}
+add_action('init', 'add_wishlist_to_product_displays');
+
+/**************************************************/
+
 function register_shipment_arrival_order_status() {
    register_post_status( 'wc-shipped', array(
        'label'                     => 'Shipped',

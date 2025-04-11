@@ -1,4 +1,27 @@
 <?php
+/*
+ * Add a new column to the WooCommerce category list table
+ */
+add_filter('manage_edit-product_cat_columns', function ($columns) {
+    $columns['category_id'] = __('ID', 'your-textdomain');
+    return $columns;
+});
+
+// Populate the new column with category ID
+add_filter('manage_product_cat_custom_column', function ($content, $column_name, $term_id) {
+    if ($column_name === 'category_id') {
+        $content = $term_id;
+    }
+    return $content;
+}, 10, 3);
+
+// Adjust column order (optional)
+add_filter('manage_edit-product_cat_sortable_columns', function ($sortable_columns) {
+    $sortable_columns['category_id'] = 'category_id';
+    return $sortable_columns;
+});
+/* ********************************** */
+
 // Add custom columns to display slider_group and shortcode
 function add_slider_columns($columns) {
     $columns['slider_group'] = __('Slider Group', 'text-domain');
@@ -171,19 +194,19 @@ function posts_custom_columns_attachment_id($column_name, $id){
 // Add a custom column to display the mls_alt_title custom field
 function add_mls_alt_title_column($columns) {
     // Add a new column after the title column
-    $columns['mls_alt_title'] = 'Alternative Title';
+    $columns['hs_altTitle'] = 'Alternative Title';
     return $columns;
 }
 add_filter('manage_pages_columns', 'add_mls_alt_title_column');
 
 // Populate the custom column with the mls_alt_title value
 function display_mls_alt_title_column($column, $post_id) {
-    if ($column === 'mls_alt_title') {
+    if ($column === 'hs_altTitle') {
         // Get the value of the custom field mls_alt_title
-        $mls_alt_title = get_post_meta($post_id, 'mls_alt_title', true);
+        $alt_title = get_post_meta($post_id, 'hs_altTitle', true);
         // Display the value, or a placeholder if it's empty
-        if (!empty($mls_alt_title)) {
-            echo '<strong>'.esc_html($mls_alt_title).'</strong>';
+        if (!empty($alt_title)) {
+            echo '<strong>'.esc_html($alt_title).'</strong>';
         } else {
             echo '<em>No Alternative Title</em>';
         }

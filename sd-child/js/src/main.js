@@ -56,23 +56,15 @@ window.onscroll = function(event) {
 jQuery(function ($) {
 
 
-	function runc() {
-		$('.counter').delay(1300).counterUp({
-			delay: 10,
-			time: 1000
-		});
-	}
+	// Initialize Autocomplete for multiple fields
+	const inputIds = ["delivery-addr", "shipping-address_1"]; // Add the IDs of the fields you want to apply Autocomplete to
 
-	if ($(".counter").length) {
-		new Waypoint( {
-		    element: $('.counter'),
-		    handler: function() { 
-		        runc();
-		        this.destroy();
-		    },
-		    offset: 'bottom-in-view',
-		} );
-	}
+	inputIds.forEach(function(inputId) {
+	    const input = document.getElementById(inputId);
+	    if (input) {
+	        new google.maps.places.Autocomplete(input);
+	    }
+	});
 
 	/*
 	 * Add phone mask to the field type-in phones
@@ -274,6 +266,51 @@ $('.yt-video-wrapper.auto-play-1').each(function(){
     // Hide the play button (since autoplay is triggered)
     $(this).find('.play').addClass('hidden');
 });
+
+    function scrollToAnchor(targetID) {
+        var $target = $('#' + targetID); // Select the target element by ID
+        if ($target.length) {
+            $('html, body').animate({
+                scrollTop: $target.offset().top - 150
+            }, 800); // Smooth scroll
+        }
+    }
+
+    // Handle clicks on menu links
+    $('.sub-menu li a[href*="#"]').on('click', function (event) {
+        event.preventDefault();
+        
+        var targetHref = $(this).attr('href'); // Get href value
+        var urlParts = targetHref.split('#');  // Split into [page, anchor]
+        var pagePath = urlParts[0]; // Page part
+        var anchorID = urlParts[1]; // Anchor part
+
+        // If user is on Gallery Page (page-id-8), close mobile menu
+        if ($('body').hasClass('page-id-8')) {
+            $('body').removeClass('mob-menu-opened');
+            $('#site-navigation').removeClass('menu-opened');
+            $('#mobile-menu-toggler').removeClass('toggled-on');
+
+            // Scroll to anchor without reloading the page
+            scrollToAnchor(anchorID);
+        } else {
+            // Navigate to the new page and store the anchor
+            sessionStorage.setItem('scrollToAnchor', anchorID);
+            window.location.href = targetHref;
+        }
+    });
+
+    // Wait for the full page to load before checking anchor
+    $(window).on('load', function () {
+        var storedAnchor = sessionStorage.getItem('scrollToAnchor');
+        if (storedAnchor) {
+            sessionStorage.removeItem('scrollToAnchor'); // Clear storage after use
+
+            setTimeout(function () {
+                scrollToAnchor(storedAnchor);
+            }, 500); // Short delay to ensure everything is rendered
+        }
+    });
 		
 		$('#mobile-menu-toggler').on('click', function(){
 			$('body').toggleClass('mob-menu-opened');

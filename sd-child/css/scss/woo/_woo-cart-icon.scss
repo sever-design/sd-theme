@@ -1,10 +1,29 @@
 .mini-cart {
-	
+
+		.wc-block-mini-cart[data-cart-items-count="0"] {
+			.wc-block-mini-cart__badge {
+				display: none;
+			}
+		}
+
 	.wc-block-mini-cart__button  {
+		position: relative;
+		padding: 5px 10px;
+
+
+		.wc-block-mini-cart__amount {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			padding: 5px 8px;
+			color: $_bg_light;
+			background-color: $_color_txt;
+			display: none;
+		}
 
 		.wc-block-mini-cart__amount,
 		.wc-block-mini-cart__badge {
-			color: $_bg_light;
+			
 		}
 
 		.wc-block-mini-cart__amount {
@@ -14,19 +33,33 @@
 
 		.wc-block-mini-cart__quantity-badge {
 			svg {
+				width: 34px;
+				height: 36px;
+
 				path {
-					fill: $_bg_light;
+					//fill: $_bg_light;
 				}
 				circle {
-					fill: $_color_accent;
+					//fill: $_color_accent;
 				}
 			}
 
 			.wc-block-mini-cart__badge {
-				background-color: $_color_accent;
+				background-color: $hover-color;
 				font-size: 11px;
 				padding: 10px 6px;
-				text-shadow: 0 0 4px #000;
+				//text-shadow: 0 0 4px #000;
+				color: $_bg_light;
+			}
+		}
+
+		&:hover {
+			.wc-block-mini-cart__amount {
+				display: block;
+
+				@include is_body_class(woocommerce-checkout) {
+					display: none;
+				}
 			}
 		}
 	}

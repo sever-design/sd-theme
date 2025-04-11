@@ -122,6 +122,20 @@ usage:
 	}
 }
 
+@mixin is_body_classes($class_names...) {
+  // Start with 'body'
+  $selector: body;
+
+  // Append each class name to the selector
+  @each $class_name in $class_names {
+    $selector: $selector + '.' + $class_name;
+  }
+
+  // Apply styles when all the classes are present on body
+  #{$selector} & {
+    @content;
+  }
+}
 
 @mixin is_mobile {
 	html.mobile & {

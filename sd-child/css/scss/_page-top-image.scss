@@ -3,7 +3,12 @@
 	.breadcrumbs-wrapper {
 
 		a {
+			color: $_color_txt;
+			text-decoration: underline;
 
+			&:hover {
+				text-decoration: none;
+			}
 		}
 	}
 
@@ -15,14 +20,18 @@
 
 		&.no-set-bg {
 			.opacity-lvl {
-				background: rgba(0,0,0,.65);
+				//background: rgba(0,0,0,.65);
+				background: $_bg_light_3;
+				/* url($_img_path + 'logo-copateam-light.svg') no-repeat center bottom;*/
+				background-size: 100% auto;
+
 			}
 		}
 
-		&.image {
+		&.bg-image {
 			background-size: cover;
 			background-color: $_bg_light;
-			background-position-x: center !important;
+			background-position: center !important;
 			background-repeat: no-repeat;
 
 

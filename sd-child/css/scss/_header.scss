@@ -38,5 +38,22 @@
 
 	#masthead {
 		position: fixed;
+
+		> div {
+			padding-top: 20px;
+			transition: padding-top .3s;
+
+			@include is_body_class(admin-bar) {
+				top: 32px;
+			}
+
+			@include is_body_class(scrolled) {
+				padding-top: 0;
+			}
+
+			@include is_body_classes(admin-bar, scrolled) {
+				padding-top: 0;
+			}
+		}
 	}
 }

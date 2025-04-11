@@ -48,7 +48,7 @@ if ($sidebar) {
 
 ?>
 
-	<section id="primary" class="site-content-inner category-section" role="main">
+	<section id="primary" class="site-content-inner category-section" role="main" itemscope itemtype="https://schema.org/CollectionPage">
 				
 	<?php if( $useTitle ) {?>
 		<div class="container-fluid">
@@ -114,4 +114,62 @@ if ($sidebar) {
 			</div>
 		</div>
 	</section>
-<?php get_footer(); ?>
+<?php
+// Advanced JSON-LD Schema Markup for Category Pages
+function generate_category_page_schema_markup() {
+    if (is_category()) {
+        $category = get_queried_object();
+        
+        $schema = array(
+            "@context" => "https://schema.org",
+            "@type" => "CollectionPage",
+            "name" => $category->name,
+            "url" => get_category_link($category->term_id),
+            "description" => $category->description ?: 'Collection of posts in the ' . $category->name . ' category',
+            "mainEntity" => array(
+                "@type" => "ItemList",
+                "itemListElement" => array()
+            )
+        );
+
+        // Get recent posts in this category
+        $recent_posts = get_posts(array(
+            'category' => $category->term_id,
+            'numberposts' => 10
+        ));
+
+        foreach ($recent_posts as $index => $post) {
+            $schema['mainEntity']['itemListElement'][] = array(
+                "@type" => "ListItem",
+                "position" => $index + 1,
+                "url" => get_permalink($post->ID),
+                "name" => $post->post_title
+            );
+        }
+
+        // Add subcategories if they exist
+        $children = get_terms(array(
+            'taxonomy' => $category->taxonomy,
+            'parent' => $category->term_id,
+            'hide_empty' => false
+        ));
+
+        if (!empty($children)) {
+            $schema['subCollection'] = array();
+            foreach ($children as $child) {
+                $schema['subCollection'][] = array(
+                    "@type" => "CollectionPage",
+                    "name" => $child->name,
+                    "url" => get_category_link($child->term_id)
+                );
+            }
+        }
+
+        echo '<script type="application/ld+json">' . 
+             json_encode($schema, JSON_PRETTY_PRINT) . 
+             '</script>';
+    }
+}
+add_action('wp_head', 'generate_category_page_schema_markup');
+
+get_footer(); ?>

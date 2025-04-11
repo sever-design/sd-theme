@@ -7,7 +7,7 @@
 body {
     @include fluid-type($_screen_min_width, $_screen_max_width, 14px, 17px);
     line-height: $_line_height_norm;
-    font-weight: 300;
+    font-weight: 400;
     font-family: Sans-Serif;
 }
 
@@ -60,33 +60,81 @@ article {
             color: $_color_accent;
         }
 
-        figure[class*="align"] {
-            @include screen(custom, max, 600) {
-                float: unset !important;
-                margin: 0 auto 15px;
-                text-align: center;
-                width: 100%;
-                max-width: 600px;
+        figure {
+            @extend .image-deco;
+            @extend .red;
 
-                img {
+            &[class*="align"] {
+                @include screen(custom, max, 600) {
+                    float: unset !important;
+                    margin: 0 auto 15px;
+                    text-align: center;
                     width: 100%;
+                    max-width: 600px;
+                }
+            }
+
+            img {
+                width: 100%;
+            }
+            
+        }
+
+        .sup-title + h1,
+        .sup-title + h2,
+        .sup-title + h3,
+        .sup-title + h4,
+        .sup-title + h5,
+        .sup-title + h6 {
+            margin-top: 0;
+        }
+
+        * + h1, * + h2, * + h3, * + h4, * + h5, * + h6 {
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        .wp-block-heading,
+        li, p {
+            &:not(.buttonme) {
+                margin-bottom: 15px;
+
+                a {
+                    color: $_color_accent;
+                    text-decoration: underline;
+
+                    &:hover {
+                        text-decoration: none;
+                    }
+                }
+            }
+
+            &.buttonme {
+                margin: 0 0 15px 0;
+
+                a {
+                    margin: 5px 0;
                 }
             }
         }
 
-        * + h1, * + h2, * + h3, * + h4, * + h5, * + h6 {
-            margin-top: 25px;
-        }
+        span {
+            &[class*="site_contact_phone"] {
+                > span,
+                > a {
+                    color: $_color_accent
+                }
 
-        p:not(.buttonme) {
-            margin-bottom: 15px;
+                i {
+                    margin-right: 8px;
+                }
 
-            a:not(.buttonme) {
-                color: $_color_accent;
-                text-decoration: underline;
+                > a {
+                    text-decoration: underline;
 
-                &:hover {
-                    text-decoration: none;
+                    &:hover {
+                        text-decoration: none;
+                    }
                 }
             }
         }
@@ -101,39 +149,15 @@ article {
 
         ul, ol {
             padding-left: 20px;
-
-            &.two-col-list {
-
-                columns: 2;
-                column-gap: 35px;
-
-                @include screen(custom, max, 680) {
-                    columns: 1;
-                    column-gap: unset;
-                }
-            }
-
-            &.three-col-list {
-                columns: 3;
-                column-gap: 35px;
-
-                @include screen(custom, max, 680) {
-                    columns: 1;
-                    column-gap: unset;
-                }
-            }
-
-            & > li {
-               
-            }
         }
 
-        h1 { @include fluid-type($_screen_min_width, $_screen_max_width, 28px, 36px); }
-        h2 { @include fluid-type($_screen_min_width, $_screen_max_width, 26px, 30px); }
-        h3 { @include fluid-type($_screen_min_width, $_screen_max_width, 24px, 28px); }
-        h4 { @include fluid-type($_screen_min_width, $_screen_max_width, 20px, 22px); }
-        h5 { @include fluid-type($_screen_min_width, $_screen_max_width, 18px, 20px); }
-        h6 { @include fluid-type($_screen_min_width, $_screen_max_width, 18px, 20px); }
+
+        h1:not(.sup-title), .h1 { @include fluid-type($_screen_min_width, $_screen_max_width, 28px, 56px); }
+        h2:not(.sup-title), .h2 { @include fluid-type($_screen_min_width, $_screen_max_width, 26px, 46px); }
+        h3:not(.sup-title), .h3 { @include fluid-type($_screen_min_width, $_screen_max_width, 24px, 40px); }
+        h4:not(.sup-title), .h4 { @include fluid-type($_screen_min_width, $_screen_max_width, 20px, 36px); }
+        h5:not(.sup-title), .h5 { @include fluid-type($_screen_min_width, $_screen_max_width, 18px, 20px); }
+        h6:not(.sup-title), .h6 { @include fluid-type($_screen_min_width, $_screen_max_width, 18px, 20px); }
 
 
         .wp-block-uagb-columns {

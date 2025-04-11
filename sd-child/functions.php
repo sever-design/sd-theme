@@ -15,9 +15,8 @@
 //define('WPCF7_LOAD_JS', false);
 //define('WPCF7_LOAD_CSS', false);
 
- */
-function au_cf7_shortcode_exists($post_id = null)
-{
+
+function au_cf7_shortcode_exists($post_id = null){
     if (!is_null($post_id) || (is_singular() && class_exists('WPCF7'))) {
         if (is_null($post_id)) {
             global $post;

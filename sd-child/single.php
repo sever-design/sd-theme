@@ -39,7 +39,10 @@ if ($sidebar) {
 			get_template_part('/template-parts/top', $bannerTmplInUse);
 		}
 		?>
-	<section id="primary" class="site-content-inner post-section" role="main">
+	<section id="primary" class="site-content-inner post-section" role="main" itemscope itemtype="https://schema.org/BlogPosting">
+		<meta itemprop="name" content="<?php echo get_the_title(); ?>">
+		<meta itemprop="datePublished" content="<?php echo get_the_date('c'); ?>">
+		<meta itemprop="dateModified" content="<?php echo get_the_modified_date('c'); ?>">
 		<div class="container">
 			<div class="row">
 
@@ -61,4 +64,64 @@ if ($sidebar) {
 			</div>
 		</div>
 	</section>
-<?php get_footer(); ?>
+<?php
+// Advanced JSON-LD Schema Markup for Single Posts
+function generate_single_post_schema_markup() {
+    if (is_single()) {
+        global $post;
+        
+        // Get featured image
+        $image = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'full');
+        
+        // Get author information
+        $author_id = $post->post_author;
+        $author_name = get_the_author_meta('display_name', $author_id);
+        $author_url = get_author_posts_url($author_id);
+        
+        // Get post categories
+        $categories = get_the_category($post->ID);
+        $category_names = wp_list_pluck($categories, 'name');
+        
+        $schema = array(
+            "@context" => "https://schema.org",
+            "@type" => "BlogPosting",
+            "headline" => get_the_title($post->ID),
+            "name" => get_the_title($post->ID),
+            "description" => get_the_excerpt($post->ID) ?: wp_trim_words(strip_tags($post->post_content), 30),
+            "url" => get_permalink($post->ID),
+            "datePublished" => get_the_date('c', $post->ID),
+            "dateModified" => get_the_modified_date('c', $post->ID),
+            "author" => array(
+                "@type" => "Person",
+                "name" => $author_name,
+                "url" => $author_url
+            ),
+            "publisher" => array(
+                "@type" => "Organization",
+                "name" => get_bloginfo('name'),
+                "logo" => array(
+                    "@type" => "ImageObject",
+                    "url" => get_site_icon_url()
+                )
+            ),
+            "keywords" => implode(', ', $category_names)
+        );
+        
+        // Add featured image if available
+        if ($image) {
+            $schema["image"] = array(
+                "@type" => "ImageObject",
+                "url" => $image[0],
+                "width" => $image[1],
+                "height" => $image[2]
+            );
+        }
+        
+        echo '<script type="application/ld+json">' . 
+             json_encode($schema, JSON_PRETTY_PRINT) . 
+             '</script>';
+    }
+}
+add_action('wp_head', 'generate_single_post_schema_markup');
+
+get_footer(); ?>

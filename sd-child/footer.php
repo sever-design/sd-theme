@@ -2,8 +2,8 @@
 /**
  * The template for displaying the footer.
  */
-$copyrightURL = 'https://homeshowoff.com';
-$copyrightTXT = 'Homeshowoff';
+$copyrightURL = 'https://timofey.ca';
+$copyrightTXT = 'Online Store by Timofey.ca';
 
 $logoFileName = 'logo.svg';
 $fileLogo = get_theme_file_path( '/images/'.$logoFileName );
@@ -11,8 +11,6 @@ $fileLogoW = '374';
 $fileLogoH = '48';
 ?>
 
-		<img src="https://maps.googleapis.com/maps/api/staticmap?center=200-7404 King George Blvd, Surrey, BC V3W 1N6&zoom=14&size=600x400&markers=size:mid%7Ccolor:0xEA4335%7C200-7404,King,George,Blvd,Surrey,BC,V3W1N6&key=AIzaSyBBYpTz5HIUrKizzvNX7R631JBtFVVEWeQ"/>
-		<img src="https://maps.googleapis.com/maps/api/staticmap?center=1750-1188 West Georgia St, Vancouver, BC, Canada, V6E 4A2&zoom=15&size=275x211&markers=size:mid%7Ccolor:0xEA4335%7C1750-1188,West,Georgia St,Vancouver,BC,Canada,V6E4A2&key=AIzaSyBeoZfXBz7Qqtnwc1CjWMoJhEy_UpqpcOM"/>
 
 		<?php	do_action( 'quark_after_woocommerce' ); ?>
 	</main> <!-- /main#maincontentcontainer -->
@@ -38,7 +36,7 @@ $fileLogoH = '48';
 				<?php echo bloginfo('name'); ?> &copy; <?php echo date("Y"); ?>
 			</span>
 			<span>
-				Website by <a href="<?php echo $copyrightURL; ?>" target="_blank"><?php echo $copyrightTXT; ?></a>
+				<a href="<?php echo $copyrightURL; ?>" target="_blank"><?php echo $copyrightTXT; ?></a>
 			</span>
 			</p>
 		</div>
@@ -54,21 +52,29 @@ $fileLogoH = '48';
 (((^_(((/(((_/ 
  ~~~~~~~~~~~~~~~~~~-->
 <script>
+/*
 wow = new WOW(
     {
       boxClass:     'wow',      // default
       animateClass: 'animated', // default
       offset:       0,          // default
-      mobile:       true,       
+      mobile:       false,       
       live:         true        // default
     }
   )
 wow.init();
-
-document.addEventListener( 'wpcf7mailsent', function( event ) {
-  location = '/thank-you/';
-}, false );
+*/
+document.addEventListener('wpcf7mailsent', function(event) {
+    switch(event.detail.contactFormId) {
+        case 164: // download form
+            location = '/thank-you-for-download/';
+            break;
+        default:
+            location = '/thank-you/'; // Default redirect if form ID doesn't match
+    }
+}, false);
 </script>
+
 	<script>
 	//sessionStorage.fontsLoaded&&document.documentElement.classList.add("wf-active");
 
@@ -94,5 +100,42 @@ document.addEventListener( 'wpcf7mailsent', function( event ) {
 		}
 	};
 	</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "<?php echo bloginfo('name') ?>",
+  "image": "<?php echo get_stylesheet_directory_uri();?>/images/logo-copateam.svg",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "258 Esther Drive",
+    "addressLocality": "Barrie",
+    "addressRegion": "Ontario",
+    "postalCode": "L4N 0G4",
+    "addressCountry": "CA"
+  },
+  "telephone": "<?php echo do_shortcode('[get_theme_option option_name="site_contact_phone" raw="true"]') ?>",
+  "openingHours": "24/7",
+  "url": "<?php echo bloginfo('url') ?>"
+}
+
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "<?php echo bloginfo('name') ?>",
+  "url": "<?php echo bloginfo('url') ?>",
+  "logo": "<?php echo get_stylesheet_directory_uri();?>/images/logo-copateam.svg",
+  "sameAs": [
+    "<?php echo do_shortcode('[get_social_media raw="true" link="social_facebook"]'); ?>",
+    "<?php echo do_shortcode('[get_social_media raw="true" link="social_instagram"]'); ?>"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "<?php echo do_shortcode('[get_theme_option option_name="site_contact_phone" raw="true"]') ?>",
+    "contactType": "Customer Support",
+    "areaServed": "CA",
+    "availableLanguage": "English"
+  }
+}</script>
+<div id="sd-overlay"></div>
 </body>
 </html>

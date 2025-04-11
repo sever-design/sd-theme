@@ -1,0 +1,60 @@
+// Variables for colors and paths
+$background-image: url('https://example.com/wp-content/uploads/bg-image.jpg');
+$logo-image: url('https://example.com/wp-content/uploads/custom-logo.png');
+$primary-color: #0073aa;
+$hover-color: #005177;
+$form-bg: rgba(255, 255, 255, 0.9);
+
+// Apply background image or color
+body.login {
+    background: $background-image no-repeat center center fixed;
+    background-size: cover;
+}
+
+// Customize login form box
+.login form {
+    background: $form-bg;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+// Custom logo
+.login h1 a {
+    background-image: $logo-image;
+    background-size: contain;
+    width: 300px;
+    height: 80px;
+    display: block;
+}
+
+// Customize login button
+.wp-core-ui .button-primary {
+    background-color: $primary-color;
+    border-color: darken($primary-color, 10%);
+    text-shadow: none;
+    transition: background 0.3s ease;
+
+    &:hover {
+        background-color: $hover-color;
+        border-color: darken($hover-color, 10%);
+    }
+}
+
+// Style inputs and links
+.login input[type="text"],
+.login input[type="password"] {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 100%;
+}
+
+.login #nav a,
+.login #backtoblog a {
+    color: $primary-color;
+
+    &:hover {
+        color: $hover-color;
+    }
+}

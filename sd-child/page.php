@@ -17,6 +17,10 @@ $sidebarContent = 'sidebar-single-post';
 //Wheather to show top image On/Off - DO NOT USE WITH TITLE together
 $topImage 		= true;
 
+if(is_cart()) {
+		$topImage 		= false;
+}
+
 /* What to use - Image or Slider
  * $useBannerTmpl = 'slider' | 'image'
  */
@@ -44,7 +48,8 @@ if ($sidebar) {
 			get_template_part('/template-parts/top', $bannerTmplInUse);
 		}
 		?>
-	<section id="primary" class="site-content-inner page-section" role="main">
+	<section id="primary" class="site-content-inner page-section" role="main" itemscope itemtype="https://schema.org/WebPage">
+		<meta itemprop="name" content="<?php echo get_the_title(); ?>">
 		<div class="container">
 			<div class="row">
 				<?php if($showChildren) : ?>
@@ -71,4 +76,37 @@ if ($sidebar) {
 			</div>
 		</div>
 	</section>
-<?php get_footer(); ?>
+<?php
+// Add JSON-LD Schema Markup
+function add_page_schema_markup() {
+    if (is_page()) {
+        $page = get_queried_object();
+        $schema = array(
+            "@context" => "https://schema.org",
+            "@type" => "WebPage",
+            "name" => get_the_title($page->ID),
+            "url" => get_permalink($page->ID),
+            "description" => get_the_excerpt($page->ID) ?: wp_trim_words(strip_tags($page->post_content), 30),
+            "mainEntity" => array(
+                "@type" => "Thing",
+                "name" => get_the_title($page->ID)
+            )
+        );
+
+        // Add author if applicable
+        $author = get_the_author_meta('display_name', $page->post_author);
+        if ($author) {
+            $schema['author'] = array(
+                "@type" => "Person",
+                "name" => $author
+            );
+        }
+
+        echo '<script type="application/ld+json">' . 
+             json_encode($schema, JSON_PRETTY_PRINT) . 
+             '</script>';
+    }
+}
+add_action('wp_head', 'add_page_schema_markup');
+
+get_footer(); ?>

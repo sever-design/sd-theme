@@ -6,7 +6,9 @@ while ( have_posts() ) : the_post();
 		get_template_part( 'content', 'post' );
 	} elseif( is_page() ){
 		get_template_part( 'content', 'page' );
-	} 
+	} elseif(is_search()) {
+		get_template_part( 'content', 'search' );
+	}
 endwhile;
 if( !is_home() ) {
 	sd_content_nav( 'nav-below' );
