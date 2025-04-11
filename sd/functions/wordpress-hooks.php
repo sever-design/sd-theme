@@ -37,7 +37,7 @@ add_action('wp_enqueue_scripts', 'google_address_autocomplete_enqueue_scripts');
 
 function google_address_autocomplete_enqueue_scripts() {
     // Google Maps API
-    wp_enqueue_script('google-maps-api', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBeoZfXBz7Qqtnwc1CjWMoJhEy_UpqpcOM&libraries=places', array(), null, true);
+    wp_enqueue_script('google-maps-api', 'https://maps.googleapis.com/maps/api/js?key=YOUAPI&libraries=places', array(), null, true);
 }
 
 
